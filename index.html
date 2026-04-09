@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-adsense-account" content="ca-pub-2358850294363122">
 <title>Calculadora de Rentabilidad Inmobiliaria</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2358850294363122" crossorigin="anonymous"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -545,6 +547,177 @@
   }
 
   /* PRINT STYLES */
+
+  /* ── TOOLTIP ── */
+  .field-label-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .field-label-row label { margin-bottom: 0; }
+  .tip-btn {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    color: var(--text3);
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .tip-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .tip-popup {
+    display: none;
+    position: absolute;
+    left: 22px; top: 50%;
+    transform: translateY(-50%);
+    background: var(--surface3);
+    border: 1px solid var(--accent);
+    padding: 10px 14px;
+    width: 240px;
+    font-size: 10px;
+    color: var(--text2);
+    line-height: 1.6;
+    z-index: 100;
+    pointer-events: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .tip-popup::before {
+    content: '';
+    position: absolute;
+    left: -5px; top: 50%; transform: translateY(-50%);
+    border: 4px solid transparent;
+    border-right-color: var(--accent);
+  }
+  .tip-btn:hover .tip-popup,
+  .tip-btn:focus .tip-popup { display: block; }
+
+  /* ── GAUGE / SEMÁFORO ── */
+  .gauge-wrap {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 8px;
+  }
+  .gauge-track {
+    flex: 1; height: 6px;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .gauge-fill {
+    height: 100%;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1), background 0.4s;
+  }
+  .gauge-labels {
+    display: flex; justify-content: space-between;
+    font-size: 8px; color: var(--text3);
+    margin-top: 3px; letter-spacing: 0.06em;
+  }
+  .semaforo {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .sem-green  { background: var(--positive); color: var(--positive); }
+  .sem-yellow { background: var(--accent3);  color: var(--accent3); }
+  .sem-red    { background: var(--negative); color: var(--negative); }
+
+  /* ── GAUGE PANEL ── */
+  .gauge-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-top: 2px;
+  }
+  .gauge-panel-title {
+    font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text2); margin-bottom: 20px;
+  }
+  .gauge-item { margin-bottom: 18px; }
+  .gauge-item:last-child { margin-bottom: 0; }
+  .gauge-item-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 6px;
+  }
+  .gauge-item-name { font-size: 10px; color: var(--text2); letter-spacing: 0.06em; }
+  .gauge-item-value { font-family: 'DM Serif Display', serif; font-size: 1.2rem; }
+  .gauge-item-value.good  { color: var(--positive); }
+  .gauge-item-value.warn  { color: var(--accent3); }
+  .gauge-item-value.bad   { color: var(--negative); }
+
+  /* ── RESUMEN NARRATIVO ── */
+  .resumen-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 24px 28px;
+    margin-top: 2px;
+  }
+  .resumen-label {
+    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px;
+  }
+  .resumen-text {
+    font-size: 13px; line-height: 1.8; color: var(--text2);
+  }
+  .resumen-text strong { color: var(--text); font-weight: 500; }
+  .resumen-text .hi-green { color: var(--positive); font-weight: 500; }
+  .resumen-text .hi-red   { color: var(--negative); font-weight: 500; }
+  .resumen-text .hi-acc   { color: var(--accent);   font-weight: 500; }
+
+  /* ── PUNTO DE EQUILIBRIO ── */
+  .breakeven-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-top: 2px;
+    display: flex; align-items: center; gap: 24px;
+    flex-wrap: wrap;
+  }
+  .be-icon { font-size: 28px; opacity: 0.7; flex-shrink: 0; }
+  .be-content { flex: 1; min-width: 200px; }
+  .be-label {
+    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text3); margin-bottom: 6px;
+  }
+  .be-value {
+    font-family: 'DM Serif Display', serif; font-size: 2rem;
+    color: var(--accent); line-height: 1;
+  }
+  .be-sub { font-size: 10px; color: var(--text3); margin-top: 4px; }
+  .be-timeline {
+    flex: 2; min-width: 300px;
+  }
+  .be-bar-wrap {
+    display: flex; gap: 2px; height: 32px; align-items: flex-end;
+    margin-top: 8px;
+  }
+  .be-bar {
+    flex: 1; min-width: 8px;
+    transition: height 0.4s ease;
+    position: relative;
+    cursor: default;
+  }
+  .be-bar.neg-bar { background: rgba(224,90,74,0.35); border-top: 2px solid var(--negative); }
+  .be-bar.pos-bar { background: rgba(74,224,160,0.35); border-top: 2px solid var(--positive); }
+  .be-bar.be-mark { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .be-bar-labels {
+    display: flex; gap: 2px; margin-top: 4px;
+  }
+  .be-bar-lbl {
+    flex: 1; text-align: center; font-size: 8px; color: var(--text3);
+  }
+
+  @media print {
+    .tip-popup { display: none !important; }
+    .resumen-panel, .gauge-panel, .breakeven-panel { break-inside: avoid; }
+  }
+
   @media print {
     @page {
       size: A4;
@@ -621,6 +794,7 @@
     .amort-section { margin-top: 1px; }
 
     .panel:has(.calc-btn) { display: none; }
+    ins.adsbygoogle, [id^="ad_"] { display: none !important; }
   }
 </style>
 </head>
@@ -633,6 +807,17 @@
     <p class="subtitle">// análisis completo · flujo de caja · retorno sobre capital</p>
   </header>
 
+  <!-- AD: TOP BANNER -->
+  <div style="margin-bottom:24px;text-align:center;min-height:90px;display:flex;align-items:center;justify-content:center;">
+    <ins class="adsbygoogle"
+         style="display:block;width:100%;min-height:90px;"
+         data-ad-client="ca-pub-2358850294363122"
+         data-ad-slot="auto"
+         data-ad-format="horizontal"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
   <!-- SECCIÓN 1: PROPIEDAD -->
   <div class="grid">
     <div class="panel">
@@ -642,7 +827,10 @@
       </div>
 
       <div class="field">
-        <label>Precio de Compra</label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Precio de Compra</label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Precio total de compra de la propiedad, incluyendo estacionamiento y bodega si aplica.</span></button>
+        </div>
         <div class="input-wrap">
           <span class="input-prefix">$</span>
           <input type="number" id="precio" value="120000000" step="1000000">
@@ -667,7 +855,10 @@
       </div>
 
       <div class="field">
-        <label>Gastos Notariales & Escritura <span class="badge">aprox.</span></label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Gastos Notariales & Escritura <span class="badge">aprox.</span></label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Notaría, inscripción conservador y otros. Estima entre 1% y 1.5% del precio de compra.</span></button>
+        </div>
         <div class="input-wrap">
           <span class="input-prefix">$</span>
           <input type="number" id="gastos_escritura" value="1500000" step="100000">
@@ -682,7 +873,10 @@
       </div>
 
       <div class="field">
-        <label>Tasa Anual (%) <span class="badge">tasa efectiva</span></label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Tasa Anual (%) <span class="badge">tasa efectiva</span></label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Tasa de interés anual efectiva del crédito hipotecario. Rango actual en Chile: 4%–5.5% a tasa fija.</span></button>
+        </div>
         <div class="input-wrap">
           <input type="number" id="tasa" value="4.5" step="0.1">
           <span class="input-suffix">% anual</span>
@@ -690,7 +884,10 @@
       </div>
 
       <div class="field">
-        <label>Plazo del Crédito</label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Plazo del Crédito</label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Duración del crédito. A mayor plazo, menor dividendo pero más intereses totales. Típico: 20–30 años.</span></button>
+        </div>
         <div class="input-wrap">
           <input type="number" id="plazo" value="25" step="1" min="1" max="40">
           <span class="input-suffix">años</span>
@@ -703,7 +900,10 @@
       </div>
 
       <div class="field">
-        <label>Seguros Mensuales <span class="badge">desgravamen + sismo/incendio</span></label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Seguros Mensuales <span class="badge">desgravamen + sismo/incendio</span></label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Seguro de desgravamen (cancela deuda en caso de fallecimiento) + seguro de sismo e incendio. Suma típica: $25.000–$60.000/mes.</span></button>
+        </div>
         <div class="input-wrap">
           <span class="input-prefix">$</span>
           <input type="number" id="seguros" value="35000" step="1000">
@@ -721,7 +921,10 @@
       </div>
 
       <div class="field">
-        <label>Precio de Arriendo Mensual</label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Precio de Arriendo Mensual</label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Precio mensual de arriendo. Para estimar, revisa propiedades similares en Portalinmobiliario o Yapo.</span></button>
+        </div>
         <div class="input-wrap">
           <span class="input-prefix">$</span>
           <input type="number" id="arriendo" value="620000" step="10000">
@@ -729,7 +932,10 @@
       </div>
 
       <div class="field">
-        <label>Vacancia Esperada</label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Vacancia Esperada</label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Meses al año en que la propiedad estará desocupada. El estándar conservador es 1 mes/año (8.3% vacancia).</span></button>
+        </div>
         <div class="input-wrap">
           <input type="number" id="vacancia_meses" value="1" step="0.5" min="0" max="12">
           <span class="input-suffix">mes/año</span>
@@ -737,7 +943,10 @@
       </div>
 
       <div class="field">
-        <label>Reajuste Anual Arriendo (%)</label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Reajuste Anual Arriendo (%)</label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Aumento anual del arriendo. Históricamente ligado a IPC (~3%–4%). Contratos suelen reajustar por UF.</span></button>
+        </div>
         <div class="input-wrap">
           <input type="number" id="reajuste_arriendo" value="3.5" step="0.5">
           <span class="input-suffix">% anual</span>
@@ -745,7 +954,10 @@
       </div>
 
       <div class="field">
-        <label>Plusvalía Anual Propiedad (%)</label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Plusvalía Anual Propiedad (%)</label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Apreciación anual estimada del valor de la propiedad. Santiago promedio histórico: 4%–7% anual real.</span></button>
+        </div>
         <div class="input-wrap">
           <input type="number" id="plusvalia" value="4.0" step="0.5">
           <span class="input-suffix">% anual</span>
@@ -760,7 +972,10 @@
       </div>
 
       <div class="field">
-        <label>Corretaje / Gestión Mensual <span class="badge">% del arriendo</span></label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Corretaje / Gestión Mensual <span class="badge">% del arriendo</span></label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Comisión al corredor que gestiona el arriendo. Mercado: 8%–10% del arriendo mensual.</span></button>
+        </div>
         <div class="input-wrap">
           <input type="number" id="corretaje_pct" value="8" step="0.5" min="0">
           <span class="input-suffix">%</span>
@@ -768,7 +983,10 @@
       </div>
 
       <div class="field">
-        <label>Contribuciones (Bien Raíz) Mensuales</label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Contribuciones (Bien Raíz) Mensuales</label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Impuesto territorial mensual (SII). Para propiedades sobre ~$77M, aplica tasa de 1.2% anual.</span></button>
+        </div>
         <div class="input-wrap">
           <span class="input-prefix">$</span>
           <input type="number" id="contribuciones" value="50000" step="5000">
@@ -776,7 +994,10 @@
       </div>
 
       <div class="field">
-        <label>Gastos Comunes Mensuales</label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Gastos Comunes Mensuales</label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Gastos del edificio/condominio que paga el propietario cuando está desocupado (y a veces siempre).</span></button>
+        </div>
         <div class="input-wrap">
           <span class="input-prefix">$</span>
           <input type="number" id="gastos_comunes" value="45000" step="5000">
@@ -784,7 +1005,10 @@
       </div>
 
       <div class="field">
-        <label>Mantención & Reparaciones Anuales</label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Mantención & Reparaciones Anuales</label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Reserva anual para reparaciones: pintura, gasfitería, desperfectos. Regla: 0.5%–1% del valor de la propiedad.</span></button>
+        </div>
         <div class="input-wrap">
           <span class="input-prefix">$</span>
           <input type="number" id="mantencion" value="300000" step="50000">
@@ -802,7 +1026,10 @@
       </div>
 
       <div class="field">
-        <label>Horizonte de Análisis</label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Horizonte de Análisis</label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Número de años a proyectar. La rentabilidad mejora en el tiempo por reajuste de arriendo y plusvalía.</span></button>
+        </div>
         <div class="input-wrap">
           <input type="number" id="horizonte" value="10" step="1" min="1" max="40">
           <span class="input-suffix">años</span>
@@ -810,7 +1037,10 @@
       </div>
 
       <div class="field">
-        <label>Tasa Impuesto Renta Arrendamiento (%)</label>
+        <div class="field-label-row">
+          <label style="margin-bottom:0">Tasa Impuesto Renta Arrendamiento (%)</label>
+          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Si declaras el arriendo como renta, aplica tu tasa marginal. Muchos propietarios están exentos bajo cierto tramo.</span></button>
+        </div>
         <div class="input-wrap">
           <input type="number" id="impuesto" value="0" step="1" min="0" max="40">
           <span class="input-suffix">%</span>
@@ -848,10 +1078,30 @@
       <div class="metrics" id="metrics_grid"></div>
     </div>
 
+    <!-- GAUGE SEMÁFORO -->
+    <div class="gauge-panel" id="gauge_panel" style="display:none"></div>
+
+    <!-- RESUMEN NARRATIVO -->
+    <div class="resumen-panel" id="resumen_panel" style="display:none"></div>
+
+    <!-- PUNTO DE EQUILIBRIO -->
+    <div class="breakeven-panel" id="breakeven_panel" style="display:none"></div>
+
     <div class="breakdown" id="breakdown_tables"></div>
 
     <div class="amort-section" id="amort_section"></div>
 
+  </div>
+
+  <!-- AD: BELOW RESULTS -->
+  <div id="ad_below_results" style="display:none;margin-top:24px;text-align:center;min-height:90px;">
+    <ins class="adsbygoogle"
+         style="display:block;width:100%;min-height:90px;"
+         data-ad-client="ca-pub-2358850294363122"
+         data-ad-slot="auto"
+         data-ad-format="horizontal"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
 
   <!-- EMPTY STATE -->
@@ -1040,8 +1290,20 @@ function calcular() {
   flujos[flujos.length - 1] += patrimonioFinal; // valor residual
   const tir = calcTIR(flujos);
 
+  // ===== EXTRA CALCS =====
+  const tirPct = tir !== null ? tir * 100 : null;
+
+  // Breakeven year (cumulative flow turns positive)
+  let beYear = null;
+  let cumFlow = 0;
+  for (const d of yearData) {
+    cumFlow += d.flujo;
+    if (beYear === null && cumFlow >= 0) { beYear = d.year; break; }
+  }
+
   // ===== RENDER =====
   document.getElementById('empty_state').style.display = 'none';
+  document.getElementById('ad_below_results').style.display = 'block';
   document.getElementById('results_section').style.display = 'block';
   document.getElementById('result_subtitle').textContent =
     `horizonte ${horizonte} años · pie ${fmt(inversionInicial)} · crédito ${fmt(credito)}`;
@@ -1067,10 +1329,10 @@ function calcular() {
     },
     {
       label: 'TIR Estimada',
-      value: tir !== null ? fmtPct(tir * 100) : 'N/A',
+      value: tirPct !== null ? fmtPct(tirPct) : 'N/A',
       sub: `sobre ${horizonte} años`,
-      cls: tir && tir * 100 >= 8 ? 'good' : tir && tir * 100 >= 4 ? 'warn' : 'bad',
-      type: tir && tir * 100 >= 8 ? 'positive' : tir && tir * 100 >= 4 ? 'warning' : 'negative-m'
+      cls: tirPct && tirPct >= 8 ? 'good' : tirPct && tirPct >= 4 ? 'warn' : 'bad',
+      type: tirPct && tirPct >= 8 ? 'positive' : tirPct && tirPct >= 4 ? 'warning' : 'negative-m'
     },
     {
       label: 'ROE (Return on Equity)',
@@ -1118,6 +1380,17 @@ function calcular() {
       <div class="metric-sub">${m.sub}</div>
     `;
     mGrid.appendChild(div);
+  });
+
+  // ── GAUGE + RESUMEN + BREAKEVEN ──
+  renderGauge(capRate, tirPct, cashOnCash);
+  const beYearResult = renderBreakeven(yearData, inversionInicial, horizonte);
+  renderResumen({
+    precio, pie, credito, inversionInicial, arriendoBase,
+    flujoCajaMes1, capRate, tir, tirPct, roiEquity,
+    patrimonioFinal, valorFinalPropiedad, totalFlujoNeto,
+    horizonte, dividendoTotal, beYear: beYearResult, yearData,
+    saldoCreditoFinal, plusvaliaPct
   });
 
   // BREAKDOWN TABLES
@@ -1188,6 +1461,186 @@ function calcular() {
       </table>
     </div>
   `;
+}
+
+
+// ── RENDER GAUGE SEMÁFORO ──
+function renderGauge(capRate, tirPct, cashOnCash) {
+  const panel = document.getElementById('gauge_panel');
+  panel.style.display = 'block';
+
+  function gaugeBar(value, min, goodMin, warnMin, max) {
+    const pct = Math.min(100, Math.max(0, ((value - min) / (max - min)) * 100));
+    let color, semCls;
+    if (value >= goodMin)      { color = 'var(--positive)'; semCls = 'sem-green'; }
+    else if (value >= warnMin) { color = 'var(--accent3)';  semCls = 'sem-yellow'; }
+    else                        { color = 'var(--negative)'; semCls = 'sem-red'; }
+    return { pct, color, semCls };
+  }
+
+  const g1 = gaugeBar(capRate,    0, 5,   3.5, 10);
+  const g2 = gaugeBar(tirPct,     0, 8,   4,   20);
+  const g3 = gaugeBar(cashOnCash,-10, 2,   0,   15);
+
+  const items = [
+    {
+      name: 'Cap Rate Bruto',
+      value: fmtPct(capRate),
+      hint: 'Bueno ≥5% · Regular 3.5–5% · Bajo <3.5%',
+      g: g1,
+      cls: capRate >= 5 ? 'good' : capRate >= 3.5 ? 'warn' : 'bad',
+      labels: ['0%','5%','10%'],
+    },
+    {
+      name: 'TIR Estimada',
+      value: tirPct !== null ? fmtPct(tirPct) : 'N/A',
+      hint: 'Excelente ≥8% · Aceptable 4–8% · Bajo <4%',
+      g: g2,
+      cls: tirPct >= 8 ? 'good' : tirPct >= 4 ? 'warn' : 'bad',
+      labels: ['0%','8%','20%'],
+    },
+    {
+      name: 'Cash on Cash (Año 1)',
+      value: fmtPct(cashOnCash),
+      hint: 'Positivo ≥2% · Break-even 0–2% · Negativo <0%',
+      g: g3,
+      cls: cashOnCash >= 2 ? 'good' : cashOnCash >= 0 ? 'warn' : 'bad',
+      labels: ['-10%','0%','15%'],
+    },
+  ];
+
+  panel.innerHTML = '<div class="gauge-panel-title">// Evaluación de Rentabilidad — Semáforo</div>' +
+    items.map(item => `
+      <div class="gauge-item">
+        <div class="gauge-item-header">
+          <span class="gauge-item-name">${item.name}</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="gauge-item-value ${item.cls}">${item.value}</span>
+            <span class="semaforo ${item.g.semCls}"></span>
+          </div>
+        </div>
+        <div class="gauge-track">
+          <div class="gauge-fill" style="width:${item.g.pct}%;background:${item.g.color}"></div>
+        </div>
+        <div class="gauge-labels">
+          <span>${item.labels[0]}</span><span>${item.labels[1]}</span><span>${item.labels[2]}</span>
+        </div>
+        <div style="font-size:9px;color:var(--text3);margin-top:2px;letter-spacing:0.06em">${item.hint}</div>
+      </div>
+    `).join('');
+}
+
+// ── RENDER RESUMEN NARRATIVO ──
+function renderResumen(data) {
+  const panel = document.getElementById('resumen_panel');
+  panel.style.display = 'block';
+
+  const {
+    precio, pie, credito, inversionInicial, arriendoBase,
+    flujoCajaMes1, capRate, tir, tirPct, roiEquity,
+    patrimonioFinal, valorFinalPropiedad, totalFlujoNeto,
+    horizonte, dividendoTotal, beYear, yearData, saldoCreditoFinal,
+    plusvaliaPct
+  } = data;
+
+  const flujoMes1 = Math.round(flujoCajaMes1);
+  const signo = flujoMes1 >= 0 ? 'positivo' : 'negativo';
+  const clsFlujo = flujoMes1 >= 0 ? 'hi-green' : 'hi-red';
+
+  let beText = '';
+  if (beYear) {
+    beText = `El flujo de caja acumulado se vuelve positivo en el <strong class="hi-acc">año ${beYear}</strong>, punto a partir del cual la inversión comienza a retornar capital.`;
+  } else {
+    beText = `Dentro del horizonte de ${horizonte} años, <strong class="hi-red">el flujo acumulado no alcanza el punto de equilibrio</strong>; el retorno dependería principalmente de la plusvalía al vender.`;
+  }
+
+  const roeCls = roiEquity >= 50 ? 'hi-green' : roiEquity >= 0 ? '' : 'hi-red';
+  const roeVal = roiEquity.toFixed(1) + '%';
+
+  const capCls  = capRate >= 5 ? 'hi-green' : capRate >= 3.5 ? '' : 'hi-red';
+  const tirText = tirPct !== null
+    ? `La <strong>TIR estimada es <span class="${tirPct >= 8 ? 'hi-green' : tirPct >= 4 ? '' : 'hi-red'}">${tirPct.toFixed(2)}%</span></strong>, considerando el valor de venta al año ${horizonte}.`
+    : 'La TIR no pudo calcularse con los parámetros actuales.';
+
+  const leverage = (precio / inversionInicial).toFixed(1);
+
+  panel.innerHTML = `
+    <div class="resumen-label">// Diagnóstico en Lenguaje Natural</div>
+    <div class="resumen-text">
+      Estás adquiriendo una propiedad de <strong>${fmt(precio)}</strong> con un pie de <strong>${fmt(pie)}</strong>
+      y un crédito de <strong>${fmt(credito)}</strong>, lo que representa un <strong>apalancamiento de ${leverage}x</strong>
+      sobre tu capital inicial de <strong>${fmt(inversionInicial)}</strong> (pie + gastos).<br><br>
+
+      El arriendo genera <strong>${fmt(arriendoBase)}/mes</strong> bruto frente a un dividendo total de
+      <strong>${fmt(dividendoTotal)}/mes</strong>. El flujo neto del primer año es
+      <strong class="${clsFlujo}">${fmt(flujoMes1)}/mes</strong> — un resultado <strong>${signo}</strong>
+      que indica que la propiedad <strong>${flujoMes1 >= 0 ? 'se autofinancia desde el inicio' : 'requiere aporte de bolsillo mensual'}</strong>.<br><br>
+
+      El <strong>Cap Rate bruto es <span class="${capCls}">${fmtPct(capRate)}</span></strong>
+      (${capRate >= 5 ? 'sobre el umbral recomendado de 5%' : capRate >= 3.5 ? 'en rango aceptable, por debajo del 5% ideal' : 'bajo el mínimo recomendado de 3.5%'}).
+      ${tirText}<br><br>
+
+      ${beText}<br><br>
+
+      Al cabo de <strong>${horizonte} años</strong>, el patrimonio neto estimado es
+      <strong class="hi-green">${fmt(patrimonioFinal)}</strong>
+      (propiedad valuada en ${fmt(valorFinalPropiedad)} menos saldo deuda de ${fmt(saldoCreditoFinal)}),
+      con un ROE total de <strong class="${roeCls}">${roeVal}</strong> sobre el capital invertido.
+    </div>
+  `;
+}
+
+// ── RENDER BREAKEVEN ──
+function renderBreakeven(yearData, inversionInicial, horizonte) {
+  const panel = document.getElementById('breakeven_panel');
+  panel.style.display = 'flex';
+
+  // Cumulative net flow
+  let cumulative = [];
+  let cum = 0;
+  let beYear = null;
+  yearData.forEach(d => {
+    cum += d.flujo;
+    cumulative.push(cum);
+    if (beYear === null && cum >= 0) beYear = d.year;
+  });
+
+  const maxAbs = Math.max(...cumulative.map(Math.abs), 1);
+
+  const bars = yearData.map((d, i) => {
+    const val = cumulative[i];
+    const h = Math.max(4, Math.round((Math.abs(val) / maxAbs) * 28));
+    const isBe = (i + 1) === beYear;
+    const cls = val >= 0 ? 'pos-bar' : 'neg-bar';
+    return `<div class="be-bar ${cls}${isBe ? ' be-mark' : ''}" style="height:${h}px" title="Año ${d.year}: ${fmt(val)}"></div>`;
+  }).join('');
+
+  const lbls = yearData.map((d, i) =>
+    `<div class="be-bar-lbl">${(i + 1) % 2 === 1 ? d.year : ''}</div>`
+  ).join('');
+
+  const beLabel = beYear
+    ? `Año ${beYear}`
+    : `>${horizonte} años`;
+  const beSub = beYear
+    ? `El flujo acumulado supera $0 en el año ${beYear}`
+    : `No alcanza equilibrio en el horizonte analizado`;
+
+  panel.innerHTML = `
+    <div class="be-icon">⚖️</div>
+    <div class="be-content">
+      <div class="be-label">// Punto de Equilibrio (Flujo Acumulado)</div>
+      <div class="be-value">${beLabel}</div>
+      <div class="be-sub">${beSub}</div>
+    </div>
+    <div class="be-timeline">
+      <div style="font-size:9px;color:var(--text3);letter-spacing:0.08em;margin-bottom:4px">Flujo acumulado por año — <span style="color:var(--negative)">■</span> negativo · <span style="color:var(--positive)">■</span> positivo · <span style="color:var(--accent)">□</span> equilibrio</div>
+      <div class="be-bar-wrap">${bars}</div>
+      <div class="be-bar-labels">${lbls}</div>
+    </div>
+  `;
+
+  return beYear;
 }
 
 // TIR (Newton-Raphson)
