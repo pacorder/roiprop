@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Rentabilidad Inmobiliaria</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f0e;
+    --surface: #141716;
+    --surface2: #1c1f1d;
+    --surface3: #232724;
+    --border: #2a2f2c;
+    --accent: #b8e04a;
+    --accent2: #4ae0a0;
+    --accent3: #e0a04a;
+    --text: #e8ede9;
+    --text2: #8a9e8d;
+    --text3: #5a6e5d;
+    --negative: #e05a4a;
+    --positive: #4ae0a0;
+    --radius: 4px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(184,224,74,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(184,224,74,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  /* HEADER */
+  header {
+    margin-bottom: 48px;
+  }
+
+  .label-tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.05;
+    margin-bottom: 12px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+
+  /* LAYOUT */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+
+  .full-width { grid-column: 1 / -1; }
+
+  /* PANELS */
+  .panel {
+    background: var(--surface);
+    padding: 28px;
+    border: 1px solid var(--border);
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .panel-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .panel-title {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text2);
+  }
+
+  /* INPUTS */
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+
+  .input-wrap {
+    display: flex;
+    align-items: center;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    transition: border-color 0.15s;
+  }
+
+  .input-wrap:focus-within {
+    border-color: var(--accent);
+  }
+
+  .input-prefix, .input-suffix {
+    padding: 0 12px;
+    font-size: 11px;
+    color: var(--text3);
+    background: var(--surface3);
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .input-suffix {
+    border-right: none;
+    border-left: 1px solid var(--border);
+  }
+
+  input[type="number"] {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    height: 40px;
+    padding: 0 12px;
+    width: 100%;
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  /* COMPUTED FIELDS */
+  .computed {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--accent2);
+    height: 40px;
+    display: flex;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* RESULTS PANEL */
+  .results-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 28px;
+    margin-top: 2px;
+  }
+
+  .results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .results-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+  }
+
+  .calc-btn {
+    background: var(--accent);
+    color: #0d0f0e;
+    border: none;
+    padding: 10px 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .calc-btn:hover { background: #cef56a; transform: translateY(-1px); }
+  .calc-btn:active { transform: translateY(0); }
+
+  /* METRICS GRID */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+
+  .metric {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .metric::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+
+  .metric.highlight::before { opacity: 1; background: var(--accent); }
+  .metric.positive::before { background: var(--positive); opacity: 1; }
+  .metric.negative-m::before { background: var(--negative); opacity: 1; }
+  .metric.warning::before { background: var(--accent3); opacity: 1; }
+
+  .metric-label {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+
+  .metric-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .metric-value.good { color: var(--positive); }
+  .metric-value.bad { color: var(--negative); }
+  .metric-value.warn { color: var(--accent3); }
+  .metric-value.neutral { color: var(--text); }
+
+  .metric-sub {
+    font-size: 10px;
+    color: var(--text3);
+  }
+
+  /* BREAKDOWN TABLE */
+  .breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 2px;
+  }
+
+  .table-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 20px;
+  }
+
+  .table-title {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 16px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+  }
+
+  .row:last-child { border-bottom: none; }
+  .row-label { color: var(--text2); }
+  .row-value { color: var(--text); font-weight: 500; }
+  .row-value.pos { color: var(--positive); }
+  .row-value.neg { color: var(--negative); }
+  .row-value.accent { color: var(--accent); }
+  .row.total { border-top: 1px solid var(--border); padding-top: 12px; }
+  .row.total .row-label, .row.total .row-value { color: var(--text); font-size: 12px; }
+
+  /* AMORT TABLE */
+  .amort-section {
+    margin-top: 2px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 20px;
+  }
+
+  .amort-title {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 16px;
+  }
+
+  .amort-table-wrap {
+    overflow-x: auto;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background: var(--surface3);
+    text-align: right;
+    padding: 8px 12px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    border-bottom: 1px solid var(--border);
+  }
+
+  thead th:first-child { text-align: left; }
+
+  tbody td {
+    text-align: right;
+    padding: 7px 12px;
+    border-bottom: 1px solid rgba(42,47,44,0.5);
+    color: var(--text2);
+  }
+
+  tbody td:first-child { text-align: left; color: var(--text3); }
+  tbody tr:hover td { background: var(--surface3); color: var(--text); }
+
+  .td-pos { color: var(--positive) !important; }
+  .td-neg { color: var(--negative) !important; }
+  .td-acc { color: var(--accent) !important; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text3);
+  }
+
+  .empty-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    opacity: 0.4;
+  }
+
+  .empty-text {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  /* SLIDER */
+  .pie-slider-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 3px;
+    background: var(--border);
+    outline: none;
+    border-radius: 2px;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .range-val {
+    font-size: 12px;
+    color: var(--accent);
+    width: 48px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* DIVIDER */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 2px 0;
+  }
+
+  .divider-label {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+
+  /* TOOLTIP / BADGE */
+  .badge {
+    font-size: 9px;
+    padding: 2px 6px;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    color: var(--text3);
+    border-radius: 2px;
+    margin-left: 8px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .grid, .grid-3, .metrics { grid-template-columns: 1fr; }
+    .breakdown { grid-template-columns: 1fr; }
+    .full-width { grid-column: 1; }
+  }
+
+  /* FADE IN */
+  .results-panel, .breakdown, .amort-section {
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* PRINT BUTTON */
+  .print-btn {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .print-btn:hover {
+    border-color: var(--text2);
+    color: var(--text);
+  }
+
+  .print-btn svg {
+    width: 13px;
+    height: 13px;
+    opacity: 0.7;
+  }
+
+  /* PRINT STYLES */
+  @media print {
+    @page {
+      size: A4;
+      margin: 18mm 14mm;
+    }
+
+    body {
+      background: #fff !important;
+      color: #111 !important;
+      font-size: 10px;
+    }
+
+    body::before { display: none; }
+
+    :root {
+      --bg: #fff;
+      --surface: #f9f9f9;
+      --surface2: #f3f3f3;
+      --surface3: #eee;
+      --border: #ccc;
+      --accent: #5a8a00;
+      --accent2: #006b50;
+      --accent3: #8a5a00;
+      --text: #111;
+      --text2: #444;
+      --text3: #777;
+      --negative: #b02a1a;
+      --positive: #006b50;
+    }
+
+    .wrapper { padding: 0; max-width: 100%; }
+
+    header { margin-bottom: 20px; }
+
+    h1 { font-size: 2rem; }
+
+    .label-tag { border-color: #5a8a00; color: #5a8a00; }
+
+    .print-btn, .calc-btn { display: none !important; }
+
+    .grid, .grid-3 {
+      display: grid;
+      gap: 1px;
+      break-inside: avoid;
+    }
+
+    .panel, .results-panel, .table-panel, .amort-section {
+      border: 1px solid #ccc;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .metrics {
+      grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    .breakdown {
+      grid-template-columns: 1fr 1fr !important;
+    }
+
+    .amort-table-wrap {
+      max-height: none !important;
+      overflow: visible !important;
+    }
+
+    table { font-size: 9px; }
+
+    .metric-value { font-size: 1.3rem; }
+
+    .results-panel { margin-top: 12px; }
+
+    #empty_state { display: none !important; }
+
+    .amort-section { margin-top: 1px; }
+
+    .panel:has(.calc-btn) { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="label-tag">Inversión Inmobiliaria</div>
+    <h1>Calculadora de<br><em>Rentabilidad</em></h1>
+    <p class="subtitle">// análisis completo · flujo de caja · retorno sobre capital</p>
+  </header>
+
+  <!-- SECCIÓN 1: PROPIEDAD -->
+  <div class="grid">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon">🏠</div>
+        <span class="panel-title">Precio & Financiamiento</span>
+      </div>
+
+      <div class="field">
+        <label>Precio de Compra</label>
+        <div class="input-wrap">
+          <span class="input-prefix">$</span>
+          <input type="number" id="precio" value="120000000" step="1000000">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Pie (%) <span class="badge">% del precio</span></label>
+        <div class="slider-row">
+          <input type="range" id="pieSlider" min="5" max="50" value="20" step="1" oninput="syncPie(this.value)">
+          <span class="range-val" id="pieSliderVal">20%</span>
+        </div>
+        <div class="input-wrap" style="margin-top:8px">
+          <span class="input-prefix">$</span>
+          <input type="number" id="pie" value="24000000" step="500000" oninput="syncPieFromAmount()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Monto del Crédito</label>
+        <div class="computed" id="credito_display">— — —</div>
+      </div>
+
+      <div class="field">
+        <label>Gastos Notariales & Escritura <span class="badge">aprox.</span></label>
+        <div class="input-wrap">
+          <span class="input-prefix">$</span>
+          <input type="number" id="gastos_escritura" value="1500000" step="100000">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon">📋</div>
+        <span class="panel-title">Condiciones del Crédito</span>
+      </div>
+
+      <div class="field">
+        <label>Tasa Anual (%) <span class="badge">tasa efectiva</span></label>
+        <div class="input-wrap">
+          <input type="number" id="tasa" value="4.5" step="0.1">
+          <span class="input-suffix">% anual</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Plazo del Crédito</label>
+        <div class="input-wrap">
+          <input type="number" id="plazo" value="25" step="1" min="1" max="40">
+          <span class="input-suffix">años</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Dividendo Mensual Estimado</label>
+        <div class="computed" id="dividendo_display">— — —</div>
+      </div>
+
+      <div class="field">
+        <label>Seguros Mensuales <span class="badge">desgravamen + sismo/incendio</span></label>
+        <div class="input-wrap">
+          <span class="input-prefix">$</span>
+          <input type="number" id="seguros" value="35000" step="1000">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: ARRIENDO & COSTOS -->
+  <div class="grid">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon">💰</div>
+        <span class="panel-title">Ingresos por Arriendo</span>
+      </div>
+
+      <div class="field">
+        <label>Precio de Arriendo Mensual</label>
+        <div class="input-wrap">
+          <span class="input-prefix">$</span>
+          <input type="number" id="arriendo" value="620000" step="10000">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Vacancia Esperada</label>
+        <div class="input-wrap">
+          <input type="number" id="vacancia_meses" value="1" step="0.5" min="0" max="12">
+          <span class="input-suffix">mes/año</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Reajuste Anual Arriendo (%)</label>
+        <div class="input-wrap">
+          <input type="number" id="reajuste_arriendo" value="3.5" step="0.5">
+          <span class="input-suffix">% anual</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Plusvalía Anual Propiedad (%)</label>
+        <div class="input-wrap">
+          <input type="number" id="plusvalia" value="4.0" step="0.5">
+          <span class="input-suffix">% anual</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon">📊</div>
+        <span class="panel-title">Costos de Administración</span>
+      </div>
+
+      <div class="field">
+        <label>Corretaje / Gestión Mensual <span class="badge">% del arriendo</span></label>
+        <div class="input-wrap">
+          <input type="number" id="corretaje_pct" value="8" step="0.5" min="0">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Contribuciones (Bien Raíz) Mensuales</label>
+        <div class="input-wrap">
+          <span class="input-prefix">$</span>
+          <input type="number" id="contribuciones" value="50000" step="5000">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Gastos Comunes Mensuales</label>
+        <div class="input-wrap">
+          <span class="input-prefix">$</span>
+          <input type="number" id="gastos_comunes" value="45000" step="5000">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Mantención & Reparaciones Anuales</label>
+        <div class="input-wrap">
+          <span class="input-prefix">$</span>
+          <input type="number" id="mantencion" value="300000" step="50000">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3: IMPUESTOS & HORIZONTE -->
+  <div class="grid">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon">⏱️</div>
+        <span class="panel-title">Horizonte de Inversión & Tributario</span>
+      </div>
+
+      <div class="field">
+        <label>Horizonte de Análisis</label>
+        <div class="input-wrap">
+          <input type="number" id="horizonte" value="10" step="1" min="1" max="40">
+          <span class="input-suffix">años</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Tasa Impuesto Renta Arrendamiento (%)</label>
+        <div class="input-wrap">
+          <input type="number" id="impuesto" value="0" step="1" min="0" max="40">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="display:flex;align-items:center;justify-content:center;">
+      <div style="text-align:center;">
+        <div style="font-size:32px;margin-bottom:16px;opacity:0.5;">⚡</div>
+        <button class="calc-btn" onclick="calcular()">Calcular Rentabilidad</button>
+        <p style="font-size:10px;color:var(--text3);margin-top:12px;letter-spacing:0.08em;">Presiona para actualizar los resultados</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div id="results_section" style="display:none">
+
+    <div class="results-panel">
+      <div class="results-header">
+        <span class="results-title">Resumen de Rentabilidad</span>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:10px;color:var(--text3);letter-spacing:0.08em;" id="result_subtitle">— — —</span>
+          <button class="print-btn" onclick="window.print()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+              <rect x="6" y="14" width="12" height="8"/>
+            </svg>
+            Imprimir / PDF
+          </button>
+        </div>
+      </div>
+
+      <div class="metrics" id="metrics_grid"></div>
+    </div>
+
+    <div class="breakdown" id="breakdown_tables"></div>
+
+    <div class="amort-section" id="amort_section"></div>
+
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div id="empty_state">
+    <div class="empty-state">
+      <div class="empty-icon">📐</div>
+      <div class="empty-text">Ingresa los datos y presiona <strong style="color:var(--accent)">Calcular Rentabilidad</strong></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// --- SYNC PIE ---
+function syncPie(val) {
+  document.getElementById('pieSlider').value = val;
+  document.getElementById('pieSliderVal').textContent = val + '%';
+  const precio = parseFloat(document.getElementById('precio').value) || 0;
+  document.getElementById('pie').value = Math.round(precio * val / 100);
+  updateComputed();
+}
+
+function syncPieFromAmount() {
+  const precio = parseFloat(document.getElementById('precio').value) || 1;
+  const pie = parseFloat(document.getElementById('pie').value) || 0;
+  const pct = Math.round((pie / precio) * 100);
+  document.getElementById('pieSlider').value = Math.min(pct, 50);
+  document.getElementById('pieSliderVal').textContent = Math.min(pct, 50) + '%';
+  updateComputed();
+}
+
+// --- DIVIDEND CALC ---
+function calcDividendo(capital, tasaAnual, años) {
+  const n = años * 12;
+  const r = tasaAnual / 100 / 12;
+  if (r === 0) return capital / n;
+  return capital * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+}
+
+function fmt(n) {
+  return '$ ' + Math.round(n).toLocaleString('es-CL');
+}
+
+function fmtPct(n) {
+  return n.toFixed(2) + '%';
+}
+
+function updateComputed() {
+  const precio = parseFloat(document.getElementById('precio').value) || 0;
+  const pie = parseFloat(document.getElementById('pie').value) || 0;
+  const credito = Math.max(0, precio - pie);
+  const tasa = parseFloat(document.getElementById('tasa').value) || 0;
+  const plazo = parseFloat(document.getElementById('plazo').value) || 1;
+  const dividendo = calcDividendo(credito, tasa, plazo);
+  document.getElementById('credito_display').textContent = fmt(credito);
+  document.getElementById('dividendo_display').textContent = fmt(dividendo);
+}
+
+// Listeners
+['precio','pie','tasa','plazo'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateComputed);
+});
+document.getElementById('pieSlider').addEventListener('input', function() {
+  syncPie(this.value);
+});
+updateComputed();
+
+// --- MAIN CALC ---
+function calcular() {
+  const precio = parseFloat(document.getElementById('precio').value) || 0;
+  const pie = parseFloat(document.getElementById('pie').value) || 0;
+  const credito = Math.max(0, precio - pie);
+  const tasa = parseFloat(document.getElementById('tasa').value) || 0;
+  const plazo = parseInt(document.getElementById('plazo').value) || 25;
+  const seguros = parseFloat(document.getElementById('seguros').value) || 0;
+  const gastosEscritura = parseFloat(document.getElementById('gastos_escritura').value) || 0;
+
+  const arriendoBase = parseFloat(document.getElementById('arriendo').value) || 0;
+  const vacanciaMeses = parseFloat(document.getElementById('vacancia_meses').value) || 0;
+  const reajusteArriendo = parseFloat(document.getElementById('reajuste_arriendo').value) || 0;
+  const plusvaliaPct = parseFloat(document.getElementById('plusvalia').value) || 0;
+
+  const corretajePct = parseFloat(document.getElementById('corretaje_pct').value) || 0;
+  const contribuciones = parseFloat(document.getElementById('contribuciones').value) || 0;
+  const gastosComunes = parseFloat(document.getElementById('gastos_comunes').value) || 0;
+  const mantencion = parseFloat(document.getElementById('mantencion').value) || 0;
+
+  const horizonte = parseInt(document.getElementById('horizonte').value) || 10;
+  const impuesto = parseFloat(document.getElementById('impuesto').value) || 0;
+
+  // Inversión inicial total
+  const inversionInicial = pie + gastosEscritura;
+
+  // Dividendo
+  const dividendo = calcDividendo(credito, tasa, plazo);
+  const dividendoTotal = dividendo + seguros;
+
+  // FLUJO ANUAL
+  let totalFlujoNeto = 0;
+  let totalIngresos = 0;
+  let totalEgresos = 0;
+  let totalIntereses = 0;
+  let totalAmortizacion = 0;
+  let saldoCredito = credito;
+  const r = tasa / 100 / 12;
+  const yearData = [];
+
+  for (let y = 1; y <= horizonte; y++) {
+    // Arriendo del año (con reajuste)
+    const arriendoAño = arriendoBase * Math.pow(1 + reajusteArriendo / 100, y - 1);
+    const mesesEfectivos = 12 - vacanciaMeses;
+    const ingresoArriendo = arriendoAño * mesesEfectivos;
+
+    // Impuesto
+    const impuestoAnual = ingresoArriendo * impuesto / 100;
+    const ingresoNeto = ingresoArriendo - impuestoAnual;
+
+    // Costos operativos
+    const costoCorretaje = arriendoAño * mesesEfectivos * corretajePct / 100;
+    const costoContribuciones = contribuciones * 12;
+    const costoGastoComunes = gastosComunes * 12;
+    const costoMantencion = mantencion;
+    const totalCostosOp = costoCorretaje + costoContribuciones + costoGastoComunes + costoMantencion;
+
+    // Dividendo + intereses del año
+    let interesesAño = 0;
+    let amortAño = 0;
+    for (let m = 0; m < 12; m++) {
+      const interesesMes = saldoCredito * r;
+      const amortMes = dividendo - interesesMes;
+      interesesAño += interesesMes;
+      amortAño += amortMes;
+      saldoCredito = Math.max(0, saldoCredito - amortMes);
+    }
+
+    const dividendoAnual = dividendoTotal * 12;
+    const flujoBruto = ingresoNeto - totalCostosOp;
+    const flujoNeto = flujoBruto - dividendoAnual + (seguros * 12); // seguros ya en dividendoTotal
+    const flujoNetoCorrecto = ingresoNeto - totalCostosOp - dividendoTotal * 12;
+
+    totalFlujoNeto += flujoNetoCorrecto;
+    totalIngresos += ingresoNeto;
+    totalEgresos += totalCostosOp + dividendoTotal * 12;
+    totalIntereses += interesesAño;
+    totalAmortizacion += amortAño;
+
+    yearData.push({
+      year: y,
+      arriendo: ingresoArriendo,
+      ingresoNeto,
+      costos: totalCostosOp,
+      dividendo: dividendoTotal * 12,
+      intereses: interesesAño,
+      amort: amortAño,
+      flujo: flujoNetoCorrecto,
+      saldo: saldoCredito,
+    });
+  }
+
+  // Valor final de la propiedad
+  const valorFinalPropiedad = precio * Math.pow(1 + plusvaliaPct / 100, horizonte);
+  const gananciaCapital = valorFinalPropiedad - precio;
+  const saldoCreditoFinal = saldoCredito;
+  const patrimonioFinal = valorFinalPropiedad - saldoCreditoFinal;
+  const patrimonioInicial = pie;
+
+  // RETORNOS
+  const retornoTotalSinPlusvalia = totalFlujoNeto;
+  const retornoTotal = totalFlujoNeto + gananciaCapital - saldoCreditoFinal + credito;
+
+  // Rentabilidad bruta (cap rate)
+  const ingresoAnualBase = arriendoBase * (12 - vacanciaMeses);
+  const capRate = (ingresoAnualBase / precio) * 100;
+
+  // ROI sobre equity
+  const roiEquity = ((patrimonioFinal - inversionInicial + totalFlujoNeto) / inversionInicial) * 100;
+
+  // Flujo caja mensual promedio año 1
+  const flujoCajaMes1 = yearData[0].flujo / 12;
+
+  // Cash on cash return (año 1)
+  const cashOnCash = (yearData[0].flujo / inversionInicial) * 100;
+
+  // TIR aproximada (simplificada)
+  const flujos = [-inversionInicial, ...yearData.map(d => d.flujo)];
+  flujos[flujos.length - 1] += patrimonioFinal; // valor residual
+  const tir = calcTIR(flujos);
+
+  // ===== RENDER =====
+  document.getElementById('empty_state').style.display = 'none';
+  document.getElementById('results_section').style.display = 'block';
+  document.getElementById('result_subtitle').textContent =
+    `horizonte ${horizonte} años · pie ${fmt(inversionInicial)} · crédito ${fmt(credito)}`;
+
+  // METRICS
+  const mGrid = document.getElementById('metrics_grid');
+  mGrid.innerHTML = '';
+
+  const metrics = [
+    {
+      label: 'Cap Rate Bruto',
+      value: fmtPct(capRate),
+      sub: 'rentabilidad sobre precio',
+      cls: capRate >= 5 ? 'good' : capRate >= 3.5 ? 'warn' : 'bad',
+      type: capRate >= 5 ? 'positive' : capRate >= 3.5 ? 'warning' : 'negative-m'
+    },
+    {
+      label: 'Cash on Cash (Año 1)',
+      value: fmtPct(cashOnCash),
+      sub: 'flujo / inversión inicial',
+      cls: cashOnCash >= 0 ? 'good' : 'bad',
+      type: cashOnCash >= 0 ? 'positive' : 'negative-m'
+    },
+    {
+      label: 'TIR Estimada',
+      value: tir !== null ? fmtPct(tir * 100) : 'N/A',
+      sub: `sobre ${horizonte} años`,
+      cls: tir && tir * 100 >= 8 ? 'good' : tir && tir * 100 >= 4 ? 'warn' : 'bad',
+      type: tir && tir * 100 >= 8 ? 'positive' : tir && tir * 100 >= 4 ? 'warning' : 'negative-m'
+    },
+    {
+      label: 'ROE (Return on Equity)',
+      value: fmtPct(roiEquity),
+      sub: `retorno total sobre equity · ${horizonte} años`,
+      cls: roiEquity >= 50 ? 'good' : roiEquity >= 0 ? 'warn' : 'bad',
+      type: roiEquity >= 50 ? 'positive' : roiEquity >= 0 ? 'warning' : 'negative-m'
+    },
+    {
+      label: 'Flujo Caja Mes (Año 1)',
+      value: fmt(flujoCajaMes1),
+      sub: 'después de dividendo y costos',
+      cls: flujoCajaMes1 >= 0 ? 'good' : 'bad',
+      type: flujoCajaMes1 >= 0 ? 'positive' : 'negative-m'
+    },
+    {
+      label: 'Patrimonio Final',
+      value: fmt(patrimonioFinal),
+      sub: `propiedad − saldo crédito`,
+      cls: 'neutral',
+      type: 'highlight'
+    },
+    {
+      label: 'Valor Propiedad Final',
+      value: fmt(valorFinalPropiedad),
+      sub: `plusvalía ${fmtPct(plusvaliaPct)} / año`,
+      cls: 'neutral',
+      type: ''
+    },
+    {
+      label: 'Saldo Crédito Final',
+      value: fmt(saldoCreditoFinal),
+      sub: `deuda restante al año ${horizonte}`,
+      cls: 'warn',
+      type: 'warning'
+    },
+  ];
+
+  metrics.forEach(m => {
+    const div = document.createElement('div');
+    div.className = `metric ${m.type}`;
+    div.innerHTML = `
+      <div class="metric-label">${m.label}</div>
+      <div class="metric-value ${m.cls}">${m.value}</div>
+      <div class="metric-sub">${m.sub}</div>
+    `;
+    mGrid.appendChild(div);
+  });
+
+  // BREAKDOWN TABLES
+  const bTables = document.getElementById('breakdown_tables');
+  const costoCorretaje1 = arriendoBase * (12 - vacanciaMeses) * corretajePct / 100;
+
+  bTables.innerHTML = `
+    <div class="table-panel">
+      <div class="table-title">// Flujo Mensual Promedio (Año 1)</div>
+      <div class="row"><span class="row-label">Arriendo bruto mensual</span><span class="row-value pos">${fmt(arriendoBase)}</span></div>
+      <div class="row"><span class="row-label">Vacancia (prorrateada)</span><span class="row-value neg">− ${fmt(arriendoBase * vacanciaMeses / 12)}</span></div>
+      <div class="row"><span class="row-label">Impuesto arriendo</span><span class="row-value neg">− ${fmt(arriendoBase * (12 - vacanciaMeses) / 12 * impuesto / 100)}</span></div>
+      <div class="row"><span class="row-label">Corretaje/Gestión (${corretajePct}%)</span><span class="row-value neg">− ${fmt(costoCorretaje1 / 12)}</span></div>
+      <div class="row"><span class="row-label">Contribuciones</span><span class="row-value neg">− ${fmt(contribuciones)}</span></div>
+      <div class="row"><span class="row-label">Gastos Comunes</span><span class="row-value neg">− ${fmt(gastosComunes)}</span></div>
+      <div class="row"><span class="row-label">Mantención (prorrateada)</span><span class="row-value neg">− ${fmt(mantencion / 12)}</span></div>
+      <div class="row"><span class="row-label">Dividendo + Seguros</span><span class="row-value neg">− ${fmt(dividendoTotal)}</span></div>
+      <div class="row total"><span class="row-label">Flujo Neto Mensual</span><span class="row-value ${flujoCajaMes1 >= 0 ? 'pos' : 'neg'} accent">${fmt(flujoCajaMes1)}</span></div>
+    </div>
+
+    <div class="table-panel">
+      <div class="table-title">// Inversión Inicial & Resumen</div>
+      <div class="row"><span class="row-label">Precio de compra</span><span class="row-value">${fmt(precio)}</span></div>
+      <div class="row"><span class="row-label">Pie pagado</span><span class="row-value neg">− ${fmt(pie)}</span></div>
+      <div class="row"><span class="row-label">Gastos escritura/notaría</span><span class="row-value neg">− ${fmt(gastosEscritura)}</span></div>
+      <div class="row total"><span class="row-label">Capital inicial invertido</span><span class="row-value accent">${fmt(inversionInicial)}</span></div>
+      <div class="row"><span class="row-label">Total ingresos (${horizonte} años)</span><span class="row-value pos">${fmt(totalIngresos)}</span></div>
+      <div class="row"><span class="row-label">Total egresos operativos</span><span class="row-value neg">− ${fmt(totalEgresos - yearData.reduce((a, d) => a + d.dividendo, 0))}</span></div>
+      <div class="row"><span class="row-label">Total dividendos pagados</span><span class="row-value neg">− ${fmt(yearData.reduce((a, d) => a + d.dividendo, 0))}</span></div>
+      <div class="row total"><span class="row-label">Flujo neto total acumulado</span><span class="row-value ${totalFlujoNeto >= 0 ? 'pos' : 'neg'} accent">${fmt(totalFlujoNeto)}</span></div>
+    </div>
+  `;
+
+  // AMORT TABLE
+  const amortSec = document.getElementById('amort_section');
+  let rows = '';
+  yearData.forEach(d => {
+    const cls = d.flujo >= 0 ? 'td-pos' : 'td-neg';
+    rows += `<tr>
+      <td>Año ${d.year}</td>
+      <td>${fmt(d.arriendo)}</td>
+      <td>${fmt(d.costos)}</td>
+      <td>${fmt(d.dividendo)}</td>
+      <td>${fmt(d.intereses)}</td>
+      <td>${fmt(d.amort)}</td>
+      <td class="${cls}">${fmt(d.flujo)}</td>
+      <td>${fmt(d.saldo)}</td>
+    </tr>`;
+  });
+
+  amortSec.innerHTML = `
+    <div class="amort-title">// Proyección Anual Detallada</div>
+    <div class="amort-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Año</th>
+            <th>Ingreso Arriendo</th>
+            <th>Costos Op.</th>
+            <th>Dividendo</th>
+            <th>Intereses</th>
+            <th>Amortización</th>
+            <th>Flujo Neto</th>
+            <th>Saldo Crédito</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+// TIR (Newton-Raphson)
+function calcTIR(flujos) {
+  let r = 0.08;
+  for (let i = 0; i < 200; i++) {
+    let npv = 0, dnpv = 0;
+    for (let t = 0; t < flujos.length; t++) {
+      npv += flujos[t] / Math.pow(1 + r, t);
+      dnpv -= t * flujos[t] / Math.pow(1 + r, t + 1);
+    }
+    if (Math.abs(dnpv) < 1e-10) return null;
+    const nr = r - npv / dnpv;
+    if (Math.abs(nr - r) < 1e-8) return nr;
+    r = nr;
+    if (r < -0.99 || r > 100) return null;
+  }
+  return null;
+}
+
+// Initial computed update
+updateComputed();
+</script>
+</body>
+</html>
