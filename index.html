@@ -713,9 +713,106 @@
     flex: 1; text-align: center; font-size: 8px; color: var(--text3);
   }
 
+
+  @media print {
+  }
+
   @media print {
     .tip-popup { display: none !important; }
     .resumen-panel, .gauge-panel, .breakeven-panel { break-inside: avoid; }
+  }
+
+
+  @media print {
+  }
+
+
+  /* ── MONEDA TOGGLE ── */
+  .moneda-toggle {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-left: 16px;
+    vertical-align: middle;
+  }
+  .moneda-btn {
+    padding: 6px 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    border: none;
+    background: var(--surface2);
+    color: var(--text3);
+    transition: all 0.15s;
+  }
+  .moneda-btn.active {
+    background: var(--accent);
+    color: #0d0f0e;
+  }
+  .moneda-btn:not(.active):hover {
+    background: var(--surface3);
+    color: var(--text);
+  }
+  .currency-label {
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* ── SIN CRÉDITO TOGGLE ── */
+  .sin-credito-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    transition: border-color 0.15s;
+  }
+  .sin-credito-wrap:hover { border-color: var(--accent); }
+  .toggle-switch {
+    width: 32px; height: 18px;
+    background: var(--border);
+    border-radius: 9px;
+    position: relative;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  .toggle-switch.on { background: var(--accent); }
+  .toggle-knob {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 12px; height: 12px;
+    background: var(--text3);
+    border-radius: 50%;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .toggle-switch.on .toggle-knob {
+    transform: translateX(14px);
+    background: #0d0f0e;
+  }
+  .sin-credito-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--text2);
+  }
+  .credito-section {
+    transition: opacity 0.3s, max-height 0.4s;
+    overflow: hidden;
+    max-height: 300px;
+    opacity: 1;
+  }
+  .credito-section.oculto {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
   }
 
   @media print {
@@ -805,6 +902,14 @@
     <div class="label-tag">Inversión Inmobiliaria</div>
     <h1>Calculadora de<br><em>Rentabilidad</em></h1>
     <p class="subtitle">// análisis completo · flujo de caja · retorno sobre capital</p>
+    <div style="margin-top:20px;display:flex;align-items:center;flex-wrap:wrap;gap:12px;">
+      <span style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3)">Moneda:</span>
+      <div class="moneda-toggle">
+        <button class="moneda-btn active" id="btn_clp" onclick="setMoneda('CLP')">$ CLP</button>
+        <button class="moneda-btn" id="btn_uf" onclick="setMoneda('UF')">UF</button>
+      </div>
+      <span class="currency-label" id="uf_ref_label"></span>
+    </div>
   </header>
 
   <!-- AD: TOP BANNER -->
@@ -817,6 +922,7 @@
          data-full-width-responsive="true"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
+
 
   <!-- SECCIÓN 1: PROPIEDAD -->
   <div class="grid">
@@ -832,7 +938,7 @@
           <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Precio total de compra de la propiedad, incluyendo estacionamiento y bodega si aplica.</span></button>
         </div>
         <div class="input-wrap">
-          <span class="input-prefix">$</span>
+          <span class="input-prefix" id="prefix_precio">$</span>
           <input type="number" id="precio" value="120000000" step="1000000">
         </div>
       </div>
@@ -844,13 +950,17 @@
           <span class="range-val" id="pieSliderVal">20%</span>
         </div>
         <div class="input-wrap" style="margin-top:8px">
-          <span class="input-prefix">$</span>
+          <span class="input-prefix" id="prefix_pie">$</span>
           <input type="number" id="pie" value="24000000" step="500000" oninput="syncPieFromAmount()">
         </div>
       </div>
 
       <div class="field">
-        <label>Monto del Crédito</label>
+        <div class="sin-credito-wrap" onclick="toggleSinCredito()" id="sin_credito_wrap">
+          <div class="toggle-switch" id="sin_credito_switch"><div class="toggle-knob"></div></div>
+          <span class="sin-credito-label">Compra al contado (sin crédito / 100% pie)</span>
+        </div>
+        <label style="margin-top:12px">Monto del Crédito</label>
         <div class="computed" id="credito_display">— — —</div>
       </div>
 
@@ -860,7 +970,7 @@
           <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Notaría, inscripción conservador y otros. Estima entre 1% y 1.5% del precio de compra.</span></button>
         </div>
         <div class="input-wrap">
-          <span class="input-prefix">$</span>
+          <span class="input-prefix" id="prefix_escritura">$</span>
           <input type="number" id="gastos_escritura" value="1500000" step="100000">
         </div>
       </div>
@@ -872,41 +982,49 @@
         <span class="panel-title">Condiciones del Crédito</span>
       </div>
 
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Tasa Anual (%) <span class="badge">tasa efectiva</span></label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Tasa de interés anual efectiva del crédito hipotecario. Rango actual en Chile: 4%–5.5% a tasa fija.</span></button>
+      <div class="credito-section" id="credito_section">
+        <div class="field">
+          <div class="field-label-row">
+            <label style="margin-bottom:0">Tasa Anual (%) <span class="badge">tasa efectiva</span></label>
+            <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Tasa de interés anual efectiva del crédito hipotecario. Rango actual en Chile: 4%–5.5% a tasa fija.</span></button>
+          </div>
+          <div class="input-wrap">
+            <input type="number" id="tasa" value="4.5" step="0.1">
+            <span class="input-suffix">% anual</span>
+          </div>
         </div>
-        <div class="input-wrap">
-          <input type="number" id="tasa" value="4.5" step="0.1">
-          <span class="input-suffix">% anual</span>
+
+        <div class="field">
+          <div class="field-label-row">
+            <label style="margin-bottom:0">Plazo del Crédito</label>
+            <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Duración del crédito. A mayor plazo, menor dividendo pero más intereses totales. Típico: 20–30 años.</span></button>
+          </div>
+          <div class="input-wrap">
+            <input type="number" id="plazo" value="25" step="1" min="1" max="40">
+            <span class="input-suffix">años</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Dividendo Mensual Estimado</label>
+          <div class="computed" id="dividendo_display">— — —</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label-row">
+            <label style="margin-bottom:0">Seguros Mensuales <span class="badge">desgravamen + sismo/incendio</span></label>
+            <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Seguro de desgravamen (cancela deuda en caso de fallecimiento) + seguro de sismo e incendio. Suma típica: $25.000–$60.000/mes.</span></button>
+          </div>
+          <div class="input-wrap">
+            <span class="input-prefix" id="prefix_seguros">$</span>
+            <input type="number" id="seguros" value="35000" step="1000">
+          </div>
         </div>
       </div>
 
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Plazo del Crédito</label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Duración del crédito. A mayor plazo, menor dividendo pero más intereses totales. Típico: 20–30 años.</span></button>
-        </div>
-        <div class="input-wrap">
-          <input type="number" id="plazo" value="25" step="1" min="1" max="40">
-          <span class="input-suffix">años</span>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Dividendo Mensual Estimado</label>
-        <div class="computed" id="dividendo_display">— — —</div>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Seguros Mensuales <span class="badge">desgravamen + sismo/incendio</span></label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Seguro de desgravamen (cancela deuda en caso de fallecimiento) + seguro de sismo e incendio. Suma típica: $25.000–$60.000/mes.</span></button>
-        </div>
-        <div class="input-wrap">
-          <span class="input-prefix">$</span>
-          <input type="number" id="seguros" value="35000" step="1000">
+      <div class="field" id="sin_credito_msg" style="display:none">
+        <div style="padding:12px;background:rgba(184,224,74,0.08);border:1px solid rgba(184,224,74,0.2);font-size:11px;color:var(--accent2)">
+          ✓ Compra al contado — sin dividendo ni intereses. El flujo neto equivale al ingreso menos costos operativos.
         </div>
       </div>
     </div>
@@ -926,7 +1044,7 @@
           <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Precio mensual de arriendo. Para estimar, revisa propiedades similares en Portalinmobiliario o Yapo.</span></button>
         </div>
         <div class="input-wrap">
-          <span class="input-prefix">$</span>
+          <span class="input-prefix" id="prefix_arriendo">$</span>
           <input type="number" id="arriendo" value="620000" step="10000">
         </div>
       </div>
@@ -988,7 +1106,7 @@
           <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Impuesto territorial mensual (SII). Para propiedades sobre ~$77M, aplica tasa de 1.2% anual.</span></button>
         </div>
         <div class="input-wrap">
-          <span class="input-prefix">$</span>
+          <span class="input-prefix" id="prefix_contribuciones">$</span>
           <input type="number" id="contribuciones" value="50000" step="5000">
         </div>
       </div>
@@ -999,7 +1117,7 @@
           <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Gastos del edificio/condominio que paga el propietario cuando está desocupado (y a veces siempre).</span></button>
         </div>
         <div class="input-wrap">
-          <span class="input-prefix">$</span>
+          <span class="input-prefix" id="prefix_gastos_comunes">$</span>
           <input type="number" id="gastos_comunes" value="45000" step="5000">
         </div>
       </div>
@@ -1010,7 +1128,7 @@
           <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Reserva anual para reparaciones: pintura, gasfitería, desperfectos. Regla: 0.5%–1% del valor de la propiedad.</span></button>
         </div>
         <div class="input-wrap">
-          <span class="input-prefix">$</span>
+          <span class="input-prefix" id="prefix_mantencion">$</span>
           <input type="number" id="mantencion" value="300000" step="50000">
         </div>
       </div>
@@ -1115,12 +1233,123 @@
 </div>
 
 <script>
+
+// ── MONEDA STATE ──
+let MONEDA = 'CLP';   // 'CLP' | 'UF'
+let UF_VALOR = 38000; // valor UF por defecto, se intenta obtener en vivo
+let SIN_CREDITO = false;
+
+// Fetch UF value (Mindicador API)
+fetch('https://mindicador.cl/api/uf')
+  .then(r => r.json())
+  .then(d => {
+    UF_VALOR = d.serie[0].valor;
+    document.getElementById('uf_ref_label').textContent = `1 UF = $ ${Math.round(UF_VALOR).toLocaleString('es-CL')}`;
+  })
+  .catch(() => {
+    document.getElementById('uf_ref_label').textContent = `1 UF ≈ $ ${UF_VALOR.toLocaleString('es-CL')} (est.)`;
+  });
+
+function setMoneda(m) {
+  if (m === MONEDA) return;
+  const factor = m === 'UF' ? (1 / UF_VALOR) : UF_VALOR;
+  MONEDA = m;
+
+  // Toggle buttons
+  document.getElementById('btn_clp').classList.toggle('active', m === 'CLP');
+  document.getElementById('btn_uf').classList.toggle('active', m === 'UF');
+
+  // Fields to convert (id → step in UF mode)
+  const moneyFields = [
+    { id: 'precio',          stepCLP: 1000000,  stepUF: 10 },
+    { id: 'pie',             stepCLP: 500000,   stepUF: 5  },
+    { id: 'gastos_escritura',stepCLP: 100000,   stepUF: 1  },
+    { id: 'seguros',         stepCLP: 1000,     stepUF: 0.01 },
+    { id: 'arriendo',        stepCLP: 10000,    stepUF: 0.1  },
+    { id: 'contribuciones',  stepCLP: 5000,     stepUF: 0.1  },
+    { id: 'gastos_comunes',  stepCLP: 5000,     stepUF: 0.1  },
+    { id: 'mantencion',      stepCLP: 50000,    stepUF: 1    },
+  ];
+
+  moneyFields.forEach(f => {
+    const el = document.getElementById(f.id);
+    if (!el) return;
+    const val = parseFloat(el.value) || 0;
+    el.value = m === 'UF'
+      ? (val / UF_VALOR).toFixed(2)
+      : Math.round(val * UF_VALOR);
+    el.step = m === 'UF' ? f.stepUF : f.stepCLP;
+  });
+
+  // Update $ prefixes to UF
+  const prefixEls = document.querySelectorAll('[id^="prefix_"]');
+  prefixEls.forEach(el => { el.textContent = m === 'UF' ? 'UF' : '$'; });
+
+  // Update pie slider display
+  syncPieFromAmount();
+  updateComputed();
+
+  // Update placeholder tips (computed)
+  updateComputed();
+}
+
+function getValCLP(id) {
+  const v = parseFloat(document.getElementById(id).value) || 0;
+  return MONEDA === 'UF' ? v * UF_VALOR : v;
+}
+
+function fmtMoneda(n) {
+  if (MONEDA === 'UF') {
+    const uf = n / UF_VALOR;
+    return 'UF ' + uf.toFixed(2);
+  }
+  return '$ ' + Math.round(n).toLocaleString('es-CL');
+}
+
+function toggleSinCredito() {
+  SIN_CREDITO = !SIN_CREDITO;
+  const sw = document.getElementById('sin_credito_switch');
+  const sec = document.getElementById('credito_section');
+  const msg = document.getElementById('sin_credito_msg');
+  const slider = document.getElementById('pieSlider');
+
+  sw.classList.toggle('on', SIN_CREDITO);
+  sec.classList.toggle('oculto', SIN_CREDITO);
+  msg.style.display = SIN_CREDITO ? 'block' : 'none';
+
+  if (SIN_CREDITO) {
+    // Set pie = 100% of precio
+    slider.min = 100;
+    slider.max = 100;
+    slider.value = 100;
+    document.getElementById('pieSliderVal').textContent = '100%';
+    const precio = getValCLP('precio');
+    const el = document.getElementById('pie');
+    el.value = MONEDA === 'UF' ? (precio / UF_VALOR).toFixed(2) : Math.round(precio);
+    el.readOnly = true;
+    el.style.opacity = '0.5';
+  } else {
+    slider.min = 5;
+    slider.max = 100;
+    slider.value = 20;
+    document.getElementById('pieSliderVal').textContent = '20%';
+    const precio = getValCLP('precio');
+    const el = document.getElementById('pie');
+    el.value = MONEDA === 'UF' ? (precio * 0.2 / UF_VALOR).toFixed(2) : Math.round(precio * 0.2);
+    el.readOnly = false;
+    el.style.opacity = '1';
+  }
+  updateComputed();
+}
+
 // --- SYNC PIE ---
 function syncPie(val) {
+  if (SIN_CREDITO) return;
   document.getElementById('pieSlider').value = val;
   document.getElementById('pieSliderVal').textContent = val + '%';
-  const precio = parseFloat(document.getElementById('precio').value) || 0;
-  document.getElementById('pie').value = Math.round(precio * val / 100);
+  const precioRaw = parseFloat(document.getElementById('precio').value) || 0;
+  const pie = MONEDA === 'UF' ? (precioRaw * val / 100).toFixed(2) : Math.round(precioRaw * val / 100);
+  document.getElementById('pie').value = pie;
   updateComputed();
 }
 
@@ -1150,14 +1379,21 @@ function fmtPct(n) {
 }
 
 function updateComputed() {
-  const precio = parseFloat(document.getElementById('precio').value) || 0;
-  const pie = parseFloat(document.getElementById('pie').value) || 0;
-  const credito = Math.max(0, precio - pie);
+  const precio = getValCLP('precio');
+  const pie = getValCLP('pie');
+  const credito = SIN_CREDITO ? 0 : Math.max(0, precio - pie);
   const tasa = parseFloat(document.getElementById('tasa').value) || 0;
   const plazo = parseFloat(document.getElementById('plazo').value) || 1;
-  const dividendo = calcDividendo(credito, tasa, plazo);
-  document.getElementById('credito_display').textContent = fmt(credito);
-  document.getElementById('dividendo_display').textContent = fmt(dividendo);
+  const dividendo = SIN_CREDITO ? 0 : calcDividendo(credito, tasa, plazo);
+  document.getElementById('credito_display').textContent = fmtMoneda(credito);
+  document.getElementById('dividendo_display').textContent = SIN_CREDITO ? '— sin crédito —' : fmtMoneda(dividendo);
+  if (SIN_CREDITO) {
+    // Keep pie in sync with precio at 100%
+    const el = document.getElementById('pie');
+    el.value = MONEDA === 'UF'
+      ? (precio / UF_VALOR).toFixed(2)
+      : Math.round(precio);
+  }
 }
 
 // Listeners
@@ -1171,23 +1407,23 @@ updateComputed();
 
 // --- MAIN CALC ---
 function calcular() {
-  const precio = parseFloat(document.getElementById('precio').value) || 0;
-  const pie = parseFloat(document.getElementById('pie').value) || 0;
-  const credito = Math.max(0, precio - pie);
+  const precio = getValCLP('precio');
+  const pie = getValCLP('pie');
+  const credito = SIN_CREDITO ? 0 : Math.max(0, precio - pie);
   const tasa = parseFloat(document.getElementById('tasa').value) || 0;
   const plazo = parseInt(document.getElementById('plazo').value) || 25;
-  const seguros = parseFloat(document.getElementById('seguros').value) || 0;
-  const gastosEscritura = parseFloat(document.getElementById('gastos_escritura').value) || 0;
+  const seguros = SIN_CREDITO ? 0 : getValCLP('seguros');
+  const gastosEscritura = getValCLP('gastos_escritura');
 
-  const arriendoBase = parseFloat(document.getElementById('arriendo').value) || 0;
+  const arriendoBase = getValCLP('arriendo');
   const vacanciaMeses = parseFloat(document.getElementById('vacancia_meses').value) || 0;
   const reajusteArriendo = parseFloat(document.getElementById('reajuste_arriendo').value) || 0;
   const plusvaliaPct = parseFloat(document.getElementById('plusvalia').value) || 0;
 
   const corretajePct = parseFloat(document.getElementById('corretaje_pct').value) || 0;
-  const contribuciones = parseFloat(document.getElementById('contribuciones').value) || 0;
-  const gastosComunes = parseFloat(document.getElementById('gastos_comunes').value) || 0;
-  const mantencion = parseFloat(document.getElementById('mantencion').value) || 0;
+  const contribuciones = getValCLP('contribuciones');
+  const gastosComunes = getValCLP('gastos_comunes');
+  const mantencion = getValCLP('mantencion');
 
   const horizonte = parseInt(document.getElementById('horizonte').value) || 10;
   const impuesto = parseFloat(document.getElementById('impuesto').value) || 0;
@@ -1196,7 +1432,7 @@ function calcular() {
   const inversionInicial = pie + gastosEscritura;
 
   // Dividendo
-  const dividendo = calcDividendo(credito, tasa, plazo);
+  const dividendo = SIN_CREDITO ? 0 : calcDividendo(credito, tasa, plazo);
   const dividendoTotal = dividendo + seguros;
 
   // FLUJO ANUAL
@@ -1343,28 +1579,28 @@ function calcular() {
     },
     {
       label: 'Flujo Caja Mes (Año 1)',
-      value: fmt(flujoCajaMes1),
+      value: fmtMoneda(flujoCajaMes1),
       sub: 'después de dividendo y costos',
       cls: flujoCajaMes1 >= 0 ? 'good' : 'bad',
       type: flujoCajaMes1 >= 0 ? 'positive' : 'negative-m'
     },
     {
       label: 'Patrimonio Final',
-      value: fmt(patrimonioFinal),
+      value: fmtMoneda(patrimonioFinal),
       sub: `propiedad − saldo crédito`,
       cls: 'neutral',
       type: 'highlight'
     },
     {
       label: 'Valor Propiedad Final',
-      value: fmt(valorFinalPropiedad),
+      value: fmtMoneda(valorFinalPropiedad),
       sub: `plusvalía ${fmtPct(plusvaliaPct)} / año`,
       cls: 'neutral',
       type: ''
     },
     {
       label: 'Saldo Crédito Final',
-      value: fmt(saldoCreditoFinal),
+      value: fmtMoneda(saldoCreditoFinal),
       sub: `deuda restante al año ${horizonte}`,
       cls: 'warn',
       type: 'warning'
@@ -1400,27 +1636,27 @@ function calcular() {
   bTables.innerHTML = `
     <div class="table-panel">
       <div class="table-title">// Flujo Mensual Promedio (Año 1)</div>
-      <div class="row"><span class="row-label">Arriendo bruto mensual</span><span class="row-value pos">${fmt(arriendoBase)}</span></div>
-      <div class="row"><span class="row-label">Vacancia (prorrateada)</span><span class="row-value neg">− ${fmt(arriendoBase * vacanciaMeses / 12)}</span></div>
-      <div class="row"><span class="row-label">Impuesto arriendo</span><span class="row-value neg">− ${fmt(arriendoBase * (12 - vacanciaMeses) / 12 * impuesto / 100)}</span></div>
-      <div class="row"><span class="row-label">Corretaje/Gestión (${corretajePct}%)</span><span class="row-value neg">− ${fmt(costoCorretaje1 / 12)}</span></div>
-      <div class="row"><span class="row-label">Contribuciones</span><span class="row-value neg">− ${fmt(contribuciones)}</span></div>
-      <div class="row"><span class="row-label">Gastos Comunes</span><span class="row-value neg">− ${fmt(gastosComunes)}</span></div>
-      <div class="row"><span class="row-label">Mantención (prorrateada)</span><span class="row-value neg">− ${fmt(mantencion / 12)}</span></div>
-      <div class="row"><span class="row-label">Dividendo + Seguros</span><span class="row-value neg">− ${fmt(dividendoTotal)}</span></div>
-      <div class="row total"><span class="row-label">Flujo Neto Mensual</span><span class="row-value ${flujoCajaMes1 >= 0 ? 'pos' : 'neg'} accent">${fmt(flujoCajaMes1)}</span></div>
+      <div class="row"><span class="row-label">Arriendo bruto mensual</span><span class="row-value pos">${fmtMoneda(arriendoBase)}</span></div>
+      <div class="row"><span class="row-label">Vacancia (prorrateada)</span><span class="row-value neg">− ${fmtMoneda(arriendoBase * vacanciaMeses / 12)}</span></div>
+      <div class="row"><span class="row-label">Impuesto arriendo</span><span class="row-value neg">− ${fmtMoneda(arriendoBase * (12 - vacanciaMeses) / 12 * impuesto / 100)}</span></div>
+      <div class="row"><span class="row-label">Corretaje/Gestión (${corretajePct}%)</span><span class="row-value neg">− ${fmtMoneda(costoCorretaje1 / 12)}</span></div>
+      <div class="row"><span class="row-label">Contribuciones</span><span class="row-value neg">− ${fmtMoneda(contribuciones)}</span></div>
+      <div class="row"><span class="row-label">Gastos Comunes</span><span class="row-value neg">− ${fmtMoneda(gastosComunes)}</span></div>
+      <div class="row"><span class="row-label">Mantención (prorrateada)</span><span class="row-value neg">− ${fmtMoneda(mantencion / 12)}</span></div>
+      <div class="row"><span class="row-label">Dividendo + Seguros</span><span class="row-value neg">− ${fmtMoneda(dividendoTotal)}</span></div>
+      <div class="row total"><span class="row-label">Flujo Neto Mensual</span><span class="row-value ${flujoCajaMes1 >= 0 ? 'pos' : 'neg'} accent">${fmtMoneda(flujoCajaMes1)}</span></div>
     </div>
 
     <div class="table-panel">
       <div class="table-title">// Inversión Inicial & Resumen</div>
-      <div class="row"><span class="row-label">Precio de compra</span><span class="row-value">${fmt(precio)}</span></div>
-      <div class="row"><span class="row-label">Pie pagado</span><span class="row-value neg">− ${fmt(pie)}</span></div>
-      <div class="row"><span class="row-label">Gastos escritura/notaría</span><span class="row-value neg">− ${fmt(gastosEscritura)}</span></div>
-      <div class="row total"><span class="row-label">Capital inicial invertido</span><span class="row-value accent">${fmt(inversionInicial)}</span></div>
-      <div class="row"><span class="row-label">Total ingresos (${horizonte} años)</span><span class="row-value pos">${fmt(totalIngresos)}</span></div>
-      <div class="row"><span class="row-label">Total egresos operativos</span><span class="row-value neg">− ${fmt(totalEgresos - yearData.reduce((a, d) => a + d.dividendo, 0))}</span></div>
-      <div class="row"><span class="row-label">Total dividendos pagados</span><span class="row-value neg">− ${fmt(yearData.reduce((a, d) => a + d.dividendo, 0))}</span></div>
-      <div class="row total"><span class="row-label">Flujo neto total acumulado</span><span class="row-value ${totalFlujoNeto >= 0 ? 'pos' : 'neg'} accent">${fmt(totalFlujoNeto)}</span></div>
+      <div class="row"><span class="row-label">Precio de compra</span><span class="row-value">${fmtMoneda(precio)}</span></div>
+      <div class="row"><span class="row-label">Pie pagado</span><span class="row-value neg">− ${fmtMoneda(pie)}</span></div>
+      <div class="row"><span class="row-label">Gastos escritura/notaría</span><span class="row-value neg">− ${fmtMoneda(gastosEscritura)}</span></div>
+      <div class="row total"><span class="row-label">Capital inicial invertido</span><span class="row-value accent">${fmtMoneda(inversionInicial)}</span></div>
+      <div class="row"><span class="row-label">Total ingresos (${horizonte} años)</span><span class="row-value pos">${fmtMoneda(totalIngresos)}</span></div>
+      <div class="row"><span class="row-label">Total egresos operativos</span><span class="row-value neg">− ${fmtMoneda(totalEgresos - yearData.reduce((a, d) => a + d.dividendo, 0))}</span></div>
+      <div class="row"><span class="row-label">Total dividendos pagados</span><span class="row-value neg">− ${fmtMoneda(yearData.reduce((a, d) => a + d.dividendo, 0))}</span></div>
+      <div class="row total"><span class="row-label">Flujo neto total acumulado</span><span class="row-value ${totalFlujoNeto >= 0 ? 'pos' : 'neg'} accent">${fmtMoneda(totalFlujoNeto)}</span></div>
     </div>
   `;
 
@@ -1431,13 +1667,13 @@ function calcular() {
     const cls = d.flujo >= 0 ? 'td-pos' : 'td-neg';
     rows += `<tr>
       <td>Año ${d.year}</td>
-      <td>${fmt(d.arriendo)}</td>
-      <td>${fmt(d.costos)}</td>
-      <td>${fmt(d.dividendo)}</td>
-      <td>${fmt(d.intereses)}</td>
-      <td>${fmt(d.amort)}</td>
-      <td class="${cls}">${fmt(d.flujo)}</td>
-      <td>${fmt(d.saldo)}</td>
+      <td>${fmtMoneda(d.arriendo)}</td>
+      <td>${fmtMoneda(d.costos)}</td>
+      <td>${fmtMoneda(d.dividendo)}</td>
+      <td>${fmtMoneda(d.intereses)}</td>
+      <td>${fmtMoneda(d.amort)}</td>
+      <td class="${cls}">${fmtMoneda(d.flujo)}</td>
+      <td>${fmtMoneda(d.saldo)}</td>
     </tr>`;
   });
 
@@ -1567,13 +1803,13 @@ function renderResumen(data) {
   panel.innerHTML = `
     <div class="resumen-label">// Diagnóstico en Lenguaje Natural</div>
     <div class="resumen-text">
-      Estás adquiriendo una propiedad de <strong>${fmt(precio)}</strong> con un pie de <strong>${fmt(pie)}</strong>
-      y un crédito de <strong>${fmt(credito)}</strong>, lo que representa un <strong>apalancamiento de ${leverage}x</strong>
-      sobre tu capital inicial de <strong>${fmt(inversionInicial)}</strong> (pie + gastos).<br><br>
+      Estás adquiriendo una propiedad de <strong>${fmtMoneda(precio)}</strong> con un pie de <strong>${fmtMoneda(pie)}</strong>
+      y un crédito de <strong>${fmtMoneda(credito)}</strong>, lo que representa un <strong>apalancamiento de ${leverage}x</strong>
+      sobre tu capital inicial de <strong>${fmtMoneda(inversionInicial)}</strong> (pie + gastos).<br><br>
 
-      El arriendo genera <strong>${fmt(arriendoBase)}/mes</strong> bruto frente a un dividendo total de
-      <strong>${fmt(dividendoTotal)}/mes</strong>. El flujo neto del primer año es
-      <strong class="${clsFlujo}">${fmt(flujoMes1)}/mes</strong> — un resultado <strong>${signo}</strong>
+      El arriendo genera <strong>${fmtMoneda(arriendoBase)}/mes</strong> bruto frente a un dividendo total de
+      <strong>${fmtMoneda(dividendoTotal)}/mes</strong>. El flujo neto del primer año es
+      <strong class="${clsFlujo}">${fmtMoneda(flujoMes1)}/mes</strong> — un resultado <strong>${signo}</strong>
       que indica que la propiedad <strong>${flujoMes1 >= 0 ? 'se autofinancia desde el inicio' : 'requiere aporte de bolsillo mensual'}</strong>.<br><br>
 
       El <strong>Cap Rate bruto es <span class="${capCls}">${fmtPct(capRate)}</span></strong>
@@ -1583,8 +1819,8 @@ function renderResumen(data) {
       ${beText}<br><br>
 
       Al cabo de <strong>${horizonte} años</strong>, el patrimonio neto estimado es
-      <strong class="hi-green">${fmt(patrimonioFinal)}</strong>
-      (propiedad valuada en ${fmt(valorFinalPropiedad)} menos saldo deuda de ${fmt(saldoCreditoFinal)}),
+      <strong class="hi-green">${fmtMoneda(patrimonioFinal)}</strong>
+      (propiedad valuada en ${fmtMoneda(valorFinalPropiedad)} menos saldo deuda de ${fmtMoneda(saldoCreditoFinal)}),
       con un ROE total de <strong class="${roeCls}">${roeVal}</strong> sobre el capital invertido.
     </div>
   `;
@@ -1612,7 +1848,7 @@ function renderBreakeven(yearData, inversionInicial, horizonte) {
     const h = Math.max(4, Math.round((Math.abs(val) / maxAbs) * 28));
     const isBe = (i + 1) === beYear;
     const cls = val >= 0 ? 'pos-bar' : 'neg-bar';
-    return `<div class="be-bar ${cls}${isBe ? ' be-mark' : ''}" style="height:${h}px" title="Año ${d.year}: ${fmt(val)}"></div>`;
+    return `<div class="be-bar ${cls}${isBe ? ' be-mark' : ''}" style="height:${h}px" title="Año ${d.year}: ${fmtMoneda(val)}"></div>`;
   }).join('');
 
   const lbls = yearData.map((d, i) =>
@@ -1661,6 +1897,8 @@ function calcTIR(flujos) {
   return null;
 }
 
+
+// ═══════════════════════════════════════════
 // Initial computed update
 updateComputed();
 </script>
