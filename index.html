@@ -4,1920 +4,804 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-adsense-account" content="ca-pub-2358850294363122">
-<title>Calculadora de Rentabilidad Inmobiliaria</title>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2358850294363122" crossorigin="anonymous"></script>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>PropTech Chile — Asesoría Inmobiliaria & Fotografía de Propiedades</title>
+<meta name="description" content="Asesoría profesional para compra y arriendo de propiedades en Chile. Mejora de fotografías inmobiliarias con IA. Calculadora de rentabilidad gratuita.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d0f0e;
-    --surface: #141716;
-    --surface2: #1c1f1d;
-    --surface3: #232724;
-    --border: #2a2f2c;
-    --accent: #b8e04a;
-    --accent2: #4ae0a0;
-    --accent3: #e0a04a;
-    --text: #e8ede9;
-    --text2: #8a9e8d;
-    --text3: #5a6e5d;
-    --negative: #e05a4a;
-    --positive: #4ae0a0;
-    --radius: 4px;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Mono', monospace;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* GRID BACKGROUND */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(184,224,74,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(184,224,74,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .wrapper {
-    position: relative;
-    z-index: 1;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 48px 24px;
-  }
-
-  /* HEADER */
-  header {
-    margin-bottom: 48px;
-  }
-
-  .label-tag {
-    display: inline-block;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    padding: 4px 10px;
-    border-radius: 2px;
-    margin-bottom: 20px;
-  }
-
-  h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2.4rem, 5vw, 3.8rem);
-    font-weight: 400;
-    color: var(--text);
-    line-height: 1.05;
-    margin-bottom: 12px;
-  }
-
-  h1 em {
-    font-style: italic;
-    color: var(--accent);
-  }
-
-  .subtitle {
-    font-size: 12px;
-    color: var(--text3);
-    letter-spacing: 0.08em;
-  }
-
-  /* LAYOUT */
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    margin-bottom: 2px;
-  }
-
-  .grid-3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 2px;
-    margin-bottom: 2px;
-  }
-
-  .full-width { grid-column: 1 / -1; }
-
-  /* PANELS */
-  .panel {
-    background: var(--surface);
-    padding: 28px;
-    border: 1px solid var(--border);
-  }
-
-  .panel-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .panel-icon {
-    width: 32px;
-    height: 32px;
-    background: var(--surface3);
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    flex-shrink: 0;
-  }
-
-  .panel-title {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text2);
-  }
-
-  /* INPUTS */
-  .field {
-    margin-bottom: 16px;
-  }
-
-  .field:last-child { margin-bottom: 0; }
-
-  label {
-    display: block;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 8px;
-  }
-
-  .input-wrap {
-    display: flex;
-    align-items: center;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    transition: border-color 0.15s;
-  }
-
-  .input-wrap:focus-within {
-    border-color: var(--accent);
-  }
-
-  .input-prefix, .input-suffix {
-    padding: 0 12px;
-    font-size: 11px;
-    color: var(--text3);
-    background: var(--surface3);
-    height: 40px;
-    display: flex;
-    align-items: center;
-    border-right: 1px solid var(--border);
-    flex-shrink: 0;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .input-suffix {
-    border-right: none;
-    border-left: 1px solid var(--border);
-  }
-
-  input[type="number"] {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    height: 40px;
-    padding: 0 12px;
-    width: 100%;
-    -moz-appearance: textfield;
-  }
-
-  input[type="number"]::-webkit-outer-spin-button,
-  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
-
-  /* COMPUTED FIELDS */
-  .computed {
-    background: var(--surface3);
-    border: 1px solid var(--border);
-    padding: 10px 12px;
-    font-size: 12px;
-    color: var(--accent2);
-    height: 40px;
-    display: flex;
-    align-items: center;
-    font-family: 'DM Mono', monospace;
-  }
-
-  /* RESULTS PANEL */
-  .results-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 28px;
-    margin-top: 2px;
-  }
-
-  .results-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 32px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .results-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.4rem;
-    font-weight: 400;
-  }
-
-  .calc-btn {
-    background: var(--accent);
-    color: #0d0f0e;
-    border: none;
-    padding: 10px 24px;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-  }
-
-  .calc-btn:hover { background: #cef56a; transform: translateY(-1px); }
-  .calc-btn:active { transform: translateY(0); }
-
-  /* METRICS GRID */
-  .metrics {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    margin-bottom: 2px;
-  }
-
-  .metric {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .metric::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--accent);
-    opacity: 0.4;
-  }
-
-  .metric.highlight::before { opacity: 1; background: var(--accent); }
-  .metric.positive::before { background: var(--positive); opacity: 1; }
-  .metric.negative-m::before { background: var(--negative); opacity: 1; }
-  .metric.warning::before { background: var(--accent3); opacity: 1; }
-
-  .metric-label {
-    font-size: 9px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 10px;
-  }
-
-  .metric-value {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.8rem;
-    font-weight: 400;
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-
-  .metric-value.good { color: var(--positive); }
-  .metric-value.bad { color: var(--negative); }
-  .metric-value.warn { color: var(--accent3); }
-  .metric-value.neutral { color: var(--text); }
-
-  .metric-sub {
-    font-size: 10px;
-    color: var(--text3);
-  }
-
-  /* BREAKDOWN TABLE */
-  .breakdown {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    margin-top: 2px;
-  }
-
-  .table-panel {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 20px;
-  }
-
-  .table-title {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text2);
-    margin-bottom: 16px;
-  }
-
-  .row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 11px;
-  }
-
-  .row:last-child { border-bottom: none; }
-  .row-label { color: var(--text2); }
-  .row-value { color: var(--text); font-weight: 500; }
-  .row-value.pos { color: var(--positive); }
-  .row-value.neg { color: var(--negative); }
-  .row-value.accent { color: var(--accent); }
-  .row.total { border-top: 1px solid var(--border); padding-top: 12px; }
-  .row.total .row-label, .row.total .row-value { color: var(--text); font-size: 12px; }
-
-  /* AMORT TABLE */
-  .amort-section {
-    margin-top: 2px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 20px;
-  }
-
-  .amort-title {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text2);
-    margin-bottom: 16px;
-  }
-
-  .amort-table-wrap {
-    overflow-x: auto;
-    max-height: 260px;
-    overflow-y: auto;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 11px;
-  }
-
-  thead th {
-    position: sticky;
-    top: 0;
-    background: var(--surface3);
-    text-align: right;
-    padding: 8px 12px;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text3);
-    border-bottom: 1px solid var(--border);
-  }
-
-  thead th:first-child { text-align: left; }
-
-  tbody td {
-    text-align: right;
-    padding: 7px 12px;
-    border-bottom: 1px solid rgba(42,47,44,0.5);
-    color: var(--text2);
-  }
-
-  tbody td:first-child { text-align: left; color: var(--text3); }
-  tbody tr:hover td { background: var(--surface3); color: var(--text); }
-
-  .td-pos { color: var(--positive) !important; }
-  .td-neg { color: var(--negative) !important; }
-  .td-acc { color: var(--accent) !important; }
-
-  /* EMPTY STATE */
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text3);
-  }
-
-  .empty-icon {
-    font-size: 40px;
-    margin-bottom: 16px;
-    opacity: 0.4;
-  }
-
-  .empty-text {
-    font-size: 12px;
-    letter-spacing: 0.08em;
-  }
-
-  /* SLIDER */
-  .pie-slider-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .slider-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  input[type="range"] {
-    flex: 1;
-    -webkit-appearance: none;
-    height: 3px;
-    background: var(--border);
-    outline: none;
-    border-radius: 2px;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 14px;
-    height: 14px;
-    background: var(--accent);
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  .range-val {
-    font-size: 12px;
-    color: var(--accent);
-    width: 48px;
-    text-align: right;
-    flex-shrink: 0;
-  }
-
-  /* DIVIDER */
-  .section-divider {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 2px 0;
-  }
-
-  .divider-label {
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text3);
-    white-space: nowrap;
-  }
-
-  /* TOOLTIP / BADGE */
-  .badge {
-    font-size: 9px;
-    padding: 2px 6px;
-    background: var(--surface3);
-    border: 1px solid var(--border);
-    color: var(--text3);
-    border-radius: 2px;
-    margin-left: 8px;
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .grid, .grid-3, .metrics { grid-template-columns: 1fr; }
-    .breakdown { grid-template-columns: 1fr; }
-    .full-width { grid-column: 1; }
-  }
-
-  /* FADE IN */
-  .results-panel, .breakdown, .amort-section {
-    animation: fadeIn 0.3s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* PRINT BUTTON */
-  .print-btn {
-    background: transparent;
-    color: var(--text2);
-    border: 1px solid var(--border);
-    padding: 10px 20px;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .print-btn:hover {
-    border-color: var(--text2);
-    color: var(--text);
-  }
-
-  .print-btn svg {
-    width: 13px;
-    height: 13px;
-    opacity: 0.7;
-  }
-
-  /* PRINT STYLES */
-
-  /* ── TOOLTIP ── */
-  .field-label-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 8px;
-  }
-  .field-label-row label { margin-bottom: 0; }
-  .tip-btn {
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    background: var(--surface3);
-    border: 1px solid var(--border);
-    color: var(--text3);
-    font-size: 9px;
-    font-family: 'DM Mono', monospace;
-    cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    transition: border-color 0.15s, color 0.15s;
-  }
-  .tip-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .tip-popup {
-    display: none;
-    position: absolute;
-    left: 22px; top: 50%;
-    transform: translateY(-50%);
-    background: var(--surface3);
-    border: 1px solid var(--accent);
-    padding: 10px 14px;
-    width: 240px;
-    font-size: 10px;
-    color: var(--text2);
-    line-height: 1.6;
-    z-index: 100;
-    pointer-events: none;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-  }
-  .tip-popup::before {
-    content: '';
-    position: absolute;
-    left: -5px; top: 50%; transform: translateY(-50%);
-    border: 4px solid transparent;
-    border-right-color: var(--accent);
-  }
-  .tip-btn:hover .tip-popup,
-  .tip-btn:focus .tip-popup { display: block; }
-
-  /* ── GAUGE / SEMÁFORO ── */
-  .gauge-wrap {
-    display: flex; align-items: center; gap: 10px;
-    margin-top: 8px;
-  }
-  .gauge-track {
-    flex: 1; height: 6px;
-    background: var(--surface3);
-    border: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-  }
-  .gauge-fill {
-    height: 100%;
-    transition: width 0.6s cubic-bezier(.4,0,.2,1), background 0.4s;
-  }
-  .gauge-labels {
-    display: flex; justify-content: space-between;
-    font-size: 8px; color: var(--text3);
-    margin-top: 3px; letter-spacing: 0.06em;
-  }
-  .semaforo {
-    width: 10px; height: 10px; border-radius: 50%;
-    flex-shrink: 0;
-    box-shadow: 0 0 6px currentColor;
-  }
-  .sem-green  { background: var(--positive); color: var(--positive); }
-  .sem-yellow { background: var(--accent3);  color: var(--accent3); }
-  .sem-red    { background: var(--negative); color: var(--negative); }
-
-  /* ── GAUGE PANEL ── */
-  .gauge-panel {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 20px 24px;
-    margin-top: 2px;
-  }
-  .gauge-panel-title {
-    font-size: 10px; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--text2); margin-bottom: 20px;
-  }
-  .gauge-item { margin-bottom: 18px; }
-  .gauge-item:last-child { margin-bottom: 0; }
-  .gauge-item-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 6px;
-  }
-  .gauge-item-name { font-size: 10px; color: var(--text2); letter-spacing: 0.06em; }
-  .gauge-item-value { font-family: 'DM Serif Display', serif; font-size: 1.2rem; }
-  .gauge-item-value.good  { color: var(--positive); }
-  .gauge-item-value.warn  { color: var(--accent3); }
-  .gauge-item-value.bad   { color: var(--negative); }
-
-  /* ── RESUMEN NARRATIVO ── */
-  .resumen-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    padding: 24px 28px;
-    margin-top: 2px;
-  }
-  .resumen-label {
-    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 12px;
-  }
-  .resumen-text {
-    font-size: 13px; line-height: 1.8; color: var(--text2);
-  }
-  .resumen-text strong { color: var(--text); font-weight: 500; }
-  .resumen-text .hi-green { color: var(--positive); font-weight: 500; }
-  .resumen-text .hi-red   { color: var(--negative); font-weight: 500; }
-  .resumen-text .hi-acc   { color: var(--accent);   font-weight: 500; }
-
-  /* ── PUNTO DE EQUILIBRIO ── */
-  .breakeven-panel {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 20px 24px;
-    margin-top: 2px;
-    display: flex; align-items: center; gap: 24px;
-    flex-wrap: wrap;
-  }
-  .be-icon { font-size: 28px; opacity: 0.7; flex-shrink: 0; }
-  .be-content { flex: 1; min-width: 200px; }
-  .be-label {
-    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--text3); margin-bottom: 6px;
-  }
-  .be-value {
-    font-family: 'DM Serif Display', serif; font-size: 2rem;
-    color: var(--accent); line-height: 1;
-  }
-  .be-sub { font-size: 10px; color: var(--text3); margin-top: 4px; }
-  .be-timeline {
-    flex: 2; min-width: 300px;
-  }
-  .be-bar-wrap {
-    display: flex; gap: 2px; height: 32px; align-items: flex-end;
-    margin-top: 8px;
-  }
-  .be-bar {
-    flex: 1; min-width: 8px;
-    transition: height 0.4s ease;
-    position: relative;
-    cursor: default;
-  }
-  .be-bar.neg-bar { background: rgba(224,90,74,0.35); border-top: 2px solid var(--negative); }
-  .be-bar.pos-bar { background: rgba(74,224,160,0.35); border-top: 2px solid var(--positive); }
-  .be-bar.be-mark { outline: 2px solid var(--accent); outline-offset: 1px; }
-  .be-bar-labels {
-    display: flex; gap: 2px; margin-top: 4px;
-  }
-  .be-bar-lbl {
-    flex: 1; text-align: center; font-size: 8px; color: var(--text3);
-  }
-
-
-  @media print {
-  }
-
-  @media print {
-    .tip-popup { display: none !important; }
-    .resumen-panel, .gauge-panel, .breakeven-panel { break-inside: avoid; }
-  }
-
-
-  @media print {
-  }
-
-
-  /* ── MONEDA TOGGLE ── */
-  .moneda-toggle {
-    display: inline-flex;
-    border: 1px solid var(--border);
-    overflow: hidden;
-    margin-left: 16px;
-    vertical-align: middle;
-  }
-  .moneda-btn {
-    padding: 6px 18px;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    border: none;
-    background: var(--surface2);
-    color: var(--text3);
-    transition: all 0.15s;
-  }
-  .moneda-btn.active {
-    background: var(--accent);
-    color: #0d0f0e;
-  }
-  .moneda-btn:not(.active):hover {
-    background: var(--surface3);
-    color: var(--text);
-  }
-  .currency-label {
-    font-size: 9px;
-    color: var(--text3);
-    letter-spacing: 0.08em;
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-
-  /* ── SIN CRÉDITO TOGGLE ── */
-  .sin-credito-wrap {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 12px;
-    padding: 10px 12px;
-    background: var(--surface3);
-    border: 1px solid var(--border);
-    cursor: pointer;
-    user-select: none;
-    transition: border-color 0.15s;
-  }
-  .sin-credito-wrap:hover { border-color: var(--accent); }
-  .toggle-switch {
-    width: 32px; height: 18px;
-    background: var(--border);
-    border-radius: 9px;
-    position: relative;
-    flex-shrink: 0;
-    transition: background 0.2s;
-  }
-  .toggle-switch.on { background: var(--accent); }
-  .toggle-knob {
-    position: absolute;
-    top: 3px; left: 3px;
-    width: 12px; height: 12px;
-    background: var(--text3);
-    border-radius: 50%;
-    transition: transform 0.2s, background 0.2s;
-  }
-  .toggle-switch.on .toggle-knob {
-    transform: translateX(14px);
-    background: #0d0f0e;
-  }
-  .sin-credito-label {
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    color: var(--text2);
-  }
-  .credito-section {
-    transition: opacity 0.3s, max-height 0.4s;
-    overflow: hidden;
-    max-height: 300px;
-    opacity: 1;
-  }
-  .credito-section.oculto {
-    max-height: 0;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  @media print {
-    @page {
-      size: A4;
-      margin: 18mm 14mm;
-    }
-
-    body {
-      background: #fff !important;
-      color: #111 !important;
-      font-size: 10px;
-    }
-
-    body::before { display: none; }
-
-    :root {
-      --bg: #fff;
-      --surface: #f9f9f9;
-      --surface2: #f3f3f3;
-      --surface3: #eee;
-      --border: #ccc;
-      --accent: #5a8a00;
-      --accent2: #006b50;
-      --accent3: #8a5a00;
-      --text: #111;
-      --text2: #444;
-      --text3: #777;
-      --negative: #b02a1a;
-      --positive: #006b50;
-    }
-
-    .wrapper { padding: 0; max-width: 100%; }
-
-    header { margin-bottom: 20px; }
-
-    h1 { font-size: 2rem; }
-
-    .label-tag { border-color: #5a8a00; color: #5a8a00; }
-
-    .print-btn, .calc-btn { display: none !important; }
-
-    .grid, .grid-3 {
-      display: grid;
-      gap: 1px;
-      break-inside: avoid;
-    }
-
-    .panel, .results-panel, .table-panel, .amort-section {
-      border: 1px solid #ccc;
-      break-inside: avoid;
-      page-break-inside: avoid;
-    }
-
-    .metrics {
-      grid-template-columns: repeat(4, 1fr) !important;
-    }
-
-    .breakdown {
-      grid-template-columns: 1fr 1fr !important;
-    }
-
-    .amort-table-wrap {
-      max-height: none !important;
-      overflow: visible !important;
-    }
-
-    table { font-size: 9px; }
-
-    .metric-value { font-size: 1.3rem; }
-
-    .results-panel { margin-top: 12px; }
-
-    #empty_state { display: none !important; }
-
-    .amort-section { margin-top: 1px; }
-
-    .panel:has(.calc-btn) { display: none; }
-    ins.adsbygoogle, [id^="ad_"] { display: none !important; }
-  }
+/* ─────────────────────────────────────────────
+   TOKENS
+───────────────────────────────────────────── */
+:root {
+  --bg:       #08090a;
+  --bg2:      #0c0e10;
+  --surface:  #111315;
+  --surface2: #161a1c;
+  --surface3: #1c2123;
+  --border:   #252c2f;
+  --border2:  #1a2022;
+  --gold:     #c9a96e;
+  --gold2:    #e8c99a;
+  --gold3:    #8a6a3a;
+  --teal:     #4ecdc4;
+  --text:     #eef0f0;
+  --text2:    #8c9ea0;
+  --text3:    #4a5c5f;
+  --neg:      #e05a4a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"DM Mono",monospace;
+  background:var(--bg);color:var(--text);
+  overflow-x:hidden;line-height:1;
+}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+
+/* ─────────────────────────────────────────────
+   NAV
+───────────────────────────────────────────── */
+.nav {
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;
+  background:rgba(8,9,10,0.85);
+  backdrop-filter:blur(20px) saturate(1.4);
+  border-bottom:1px solid rgba(201,169,110,0.1);
+  transition:background 0.3s;
+}
+.nav-brand {
+  font-family:"Cormorant Garamond",serif;
+  font-size:1.3rem;font-weight:300;letter-spacing:0.08em;
+  color:var(--gold2);
+}
+.nav-brand em{font-style:italic;color:var(--text2)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a {
+  font-size:9.5px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--text3);transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--gold)}
+.nav-links a.active{color:var(--text2)}
+.nav-wa {
+  display:inline-flex;align-items:center;gap:7px;
+  background:transparent;border:1px solid rgba(201,169,110,0.35);
+  color:var(--gold) !important;
+  padding:7px 16px;font-size:9.5px;letter-spacing:0.12em;
+  transition:all 0.2s;
+}
+.nav-wa:hover{background:rgba(201,169,110,0.08);border-color:var(--gold)}
+@media(max-width:760px){
+  .nav{padding:0 20px}
+  .nav-links{gap:16px}
+  .hide-m{display:none}
+}
+
+/* ─────────────────────────────────────────────
+   HERO
+───────────────────────────────────────────── */
+.hero {
+  min-height:100vh;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  padding:120px 40px 80px;
+}
+.hero-noise {
+  position:absolute;inset:0;z-index:0;opacity:0.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size:200px 200px;
+}
+.hero-glow {
+  position:absolute;z-index:0;
+  width:700px;height:700px;
+  right:-100px;top:50%;transform:translateY(-50%);
+  background:radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero-glow2 {
+  position:absolute;z-index:0;
+  width:400px;height:400px;
+  left:-80px;bottom:-80px;
+  background:radial-gradient(circle, rgba(78,205,196,0.04) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero-inner {
+  position:relative;z-index:1;
+  max-width:1080px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+}
+.hero-left {}
+.hero-tag {
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:32px;
+}
+.hero-tag::before{
+  content:"";width:24px;height:1px;background:var(--gold);opacity:0.5;
+}
+.hero h1 {
+  font-family:"Cormorant Garamond",serif;
+  font-size:clamp(3rem,5.5vw,5rem);font-weight:300;
+  line-height:1.05;color:var(--text);margin-bottom:24px;
+}
+.hero h1 em{font-style:italic;color:var(--gold2)}
+.hero-sub {
+  font-size:12px;color:var(--text3);line-height:1.9;
+  max-width:460px;margin-bottom:40px;
+  border-left:1px solid var(--border);padding-left:20px;
+}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-gold {
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--gold);color:#08090a;
+  padding:13px 28px;
+  font-family:"DM Mono",monospace;font-size:10px;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;
+  transition:background 0.2s,transform 0.15s;
+}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-outline {
+  display:inline-flex;align-items:center;gap:9px;
+  border:1px solid var(--border);color:var(--text2);
+  padding:13px 24px;
+  font-family:"DM Mono",monospace;font-size:10px;
+  letter-spacing:0.1em;text-transform:uppercase;
+  transition:all 0.2s;
+}
+.btn-outline:hover{border-color:var(--gold3);color:var(--gold)}
+.hero-right {
+  display:flex;flex-direction:column;gap:2px;
+}
+.hero-stat-card {
+  background:var(--surface);border:1px solid var(--border2);
+  padding:22px 24px;
+  display:flex;align-items:center;gap:20px;
+  transition:border-color 0.2s;
+}
+.hero-stat-card:hover{border-color:rgba(201,169,110,0.2)}
+.stat-num {
+  font-family:"Cormorant Garamond",serif;
+  font-size:2.2rem;font-weight:300;color:var(--gold);
+  min-width:64px;line-height:1;
+}
+.stat-info {}
+.stat-title{font-size:11px;color:var(--text);margin-bottom:4px}
+.stat-sub{font-size:10px;color:var(--text3);line-height:1.5}
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;gap:48px}
+  .hero-right{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+}
+@media(max-width:600px){
+  .hero{padding:100px 20px 60px}
+  .hero-right{grid-template-columns:1fr}
+}
+
+/* ─────────────────────────────────────────────
+   DIVIDER
+───────────────────────────────────────────── */
+.divider {
+  max-width:1080px;margin:0 auto;
+  display:flex;align-items:center;gap:20px;
+  padding:0 40px;
+}
+.divider-line{flex:1;height:1px;background:var(--border2)}
+.divider-text{
+  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);
+}
+
+/* ─────────────────────────────────────────────
+   SECTION WRAPPER
+───────────────────────────────────────────── */
+.sw{max-width:1080px;margin:0 auto;padding:80px 40px}
+.sec-tag{
+  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.sec-tag::after{content:"";flex:0 0 32px;height:1px;background:rgba(201,169,110,0.3)}
+.sec-title{
+  font-family:"Cormorant Garamond",serif;
+  font-size:clamp(2rem,3.5vw,3rem);font-weight:300;
+  line-height:1.1;margin-bottom:14px;
+}
+.sec-title em{font-style:italic;color:var(--gold2)}
+.sec-sub{font-size:12px;color:var(--text3);line-height:1.9;max-width:540px}
+
+/* ─────────────────────────────────────────────
+   SERVICES
+───────────────────────────────────────────── */
+.services{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border2);
+  border:1px solid var(--border2);
+  margin-top:48px;
+}
+.svc {
+  background:var(--surface);
+  padding:36px 30px;
+  position:relative;overflow:hidden;
+  transition:background 0.25s;
+}
+.svc::after{
+  content:"";
+  position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.svc:hover{background:var(--surface2)}
+.svc:hover::after{opacity:0.4}
+.svc-num{
+  font-family:"Cormorant Garamond",serif;
+  font-size:3rem;font-weight:300;
+  color:rgba(201,169,110,0.1);
+  position:absolute;top:16px;right:20px;line-height:1;
+}
+.svc-icon{
+  width:44px;height:44px;margin-bottom:20px;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  background:var(--surface3);
+}
+.svc-title{
+  font-family:"Cormorant Garamond",serif;
+  font-size:1.3rem;font-weight:300;
+  color:var(--text);margin-bottom:10px;
+}
+.svc-desc{font-size:11px;color:var(--text3);line-height:1.75;margin-bottom:20px}
+.svc-list{list-style:none;padding:0;margin-bottom:24px;border-top:1px solid var(--border2);padding-top:16px}
+.svc-list li{
+  font-size:10px;color:var(--text3);padding:5px 0;
+  display:flex;align-items:baseline;gap:8px;
+  border-bottom:1px solid var(--border2);
+}
+.svc-list li::before{content:"—";color:var(--gold3);font-size:9px;flex-shrink:0}
+.svc-cta{
+  font-size:9.5px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--gold);display:inline-flex;align-items:center;gap:6px;
+  transition:gap 0.2s;
+}
+.svc:hover .svc-cta{gap:10px}
+@media(max-width:860px){.services{grid-template-columns:1fr}}
+
+/* ─────────────────────────────────────────────
+   PHOTO SLIDER
+───────────────────────────────────────────── */
+.photo-section{
+  background:var(--surface);
+  border-top:1px solid var(--border2);
+  border-bottom:1px solid var(--border2);
+}
+.photo-inner{
+  max-width:1080px;margin:0 auto;
+  padding:80px 40px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:72px;align-items:center;
+}
+.photo-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:20px;
+}
+.photo-badge::before{content:"✦";font-size:8px}
+.photo-copy h2{
+  font-family:"Cormorant Garamond",serif;
+  font-size:clamp(1.8rem,3vw,2.6rem);font-weight:300;
+  line-height:1.1;margin-bottom:16px;
+}
+.photo-copy h2 em{font-style:italic;color:var(--gold2)}
+.photo-copy p{font-size:12px;color:var(--text3);line-height:1.85;margin-bottom:28px}
+.photo-metrics{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--border2);margin-bottom:28px;
+}
+.pm{
+  background:var(--surface2);padding:16px 18px;
+}
+.pm-val{
+  font-family:"Cormorant Garamond",serif;
+  font-size:1.8rem;font-weight:300;color:var(--gold);line-height:1;margin-bottom:4px;
+}
+.pm-lbl{font-size:10px;color:var(--text3)}
+
+/* ─── SLIDER ─── */
+.slider-wrap {
+  position:relative;
+  width:100%;
+  aspect-ratio:4/3;
+  overflow:hidden;
+  cursor:ew-resize;
+  user-select:none;
+  background:#000;
+}
+.slider-img {
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;
+}
+.slider-img.after {
+  clip-path:inset(0 50% 0 0);
+  transition:clip-path 0s;
+}
+.slider-line {
+  position:absolute;top:0;bottom:0;
+  width:2px;background:white;
+  left:50%;transform:translateX(-50%);
+  z-index:10;pointer-events:none;
+  box-shadow:0 0 8px rgba(0,0,0,0.5);
+}
+.slider-handle {
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:44px;height:44px;
+  background:white;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  z-index:11;pointer-events:none;
+  box-shadow:0 2px 16px rgba(0,0,0,0.4);
+}
+.slider-handle svg{width:20px;height:20px}
+.slider-label{
+  position:absolute;bottom:14px;
+  font-family:"DM Mono",monospace;font-size:9px;
+  letter-spacing:0.12em;text-transform:uppercase;
+  padding:4px 10px;z-index:12;pointer-events:none;
+}
+.slider-label.before-lbl{
+  left:14px;background:rgba(0,0,0,0.55);color:#aaa;
+}
+.slider-label.after-lbl{
+  right:14px;background:rgba(201,169,110,0.2);
+  color:var(--gold);border:1px solid rgba(201,169,110,0.3);
+}
+
+@media(max-width:860px){
+  .photo-inner{grid-template-columns:1fr;gap:40px}
+}
+@media(max-width:600px){
+  .photo-inner{padding:48px 20px}
+}
+
+/* ─────────────────────────────────────────────
+   PROCESS
+───────────────────────────────────────────── */
+.process{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--border2);
+  border:1px solid var(--border2);
+  margin-top:48px;
+}
+.proc-step{
+  background:var(--bg2);padding:28px 24px;
+  position:relative;
+}
+.proc-n{
+  font-family:"Cormorant Garamond",serif;
+  font-size:3.5rem;font-weight:300;
+  color:rgba(201,169,110,0.08);
+  line-height:1;margin-bottom:16px;
+}
+.proc-title{font-size:11px;color:var(--text);letter-spacing:0.06em;margin-bottom:8px}
+.proc-desc{font-size:10.5px;color:var(--text3);line-height:1.7}
+@media(max-width:760px){.process{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.process{grid-template-columns:1fr}}
+
+/* ─────────────────────────────────────────────
+   TOOL PROMO STRIP
+───────────────────────────────────────────── */
+.tool-strip{
+  border-top:1px solid var(--border2);
+  border-bottom:1px solid var(--border2);
+  background:linear-gradient(90deg, rgba(201,169,110,0.04) 0%, transparent 60%);
+}
+.tool-strip-inner{
+  max-width:1080px;margin:0 auto;padding:48px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:32px;flex-wrap:wrap;
+}
+.tool-strip-text .t-tag{
+  font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;
+}
+.tool-strip-text h2{
+  font-family:"Cormorant Garamond",serif;
+  font-size:clamp(1.5rem,2.5vw,2rem);font-weight:300;
+  margin-bottom:6px;
+}
+.tool-strip-text p{font-size:11px;color:var(--text3)}
+.tool-strip-btns{display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+
+/* ─────────────────────────────────────────────
+   CTA FINAL
+───────────────────────────────────────────── */
+.cta-final{
+  text-align:center;padding:100px 40px;
+  position:relative;overflow:hidden;
+}
+.cta-final-glow{
+  position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%, rgba(201,169,110,0.05) 0%, transparent 70%);
+}
+.cta-final-inner{position:relative;z-index:1;max-width:600px;margin:0 auto}
+.cta-final h2{
+  font-family:"Cormorant Garamond",serif;
+  font-size:clamp(2rem,4vw,3.2rem);font-weight:300;
+  margin-bottom:16px;
+}
+.cta-final h2 em{font-style:italic;color:var(--gold2)}
+.cta-final p{font-size:12px;color:var(--text3);margin-bottom:36px;line-height:1.8}
+
+/* ─────────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────────── */
+.footer{
+  background:var(--bg2);
+  border-top:1px solid var(--border2);
+  padding:56px 40px 28px;
+}
+.footer-inner{max-width:1080px;margin:0 auto}
+.footer-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:48px;margin-bottom:48px;
+}
+.footer-brand{
+  font-family:"Cormorant Garamond",serif;
+  font-size:1.3rem;font-weight:300;color:var(--gold2);
+  margin-bottom:12px;
+}
+.footer-tagline{font-size:11px;color:var(--text3);line-height:1.7;margin-bottom:20px}
+.footer-col-title{
+  font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:16px;
+  padding-bottom:10px;border-bottom:1px solid var(--border2);
+}
+.footer-links{display:flex;flex-direction:column;gap:9px}
+.footer-links a{font-size:11px;color:var(--text3);transition:color 0.15s}
+.footer-links a:hover{color:var(--gold)}
+.footer-bottom{
+  border-top:1px solid var(--border2);padding-top:20px;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-size:10px;color:var(--text3);
+}
+.wa-btn-footer{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#1a2e1a;border:1px solid #2a4a2a;
+  color:#4ade80;padding:10px 18px;
+  font-family:"DM Mono",monospace;font-size:10px;letter-spacing:0.08em;
+  transition:all 0.2s;
+}
+.wa-btn-footer:hover{background:#1f3a1f;border-color:#3a6a3a}
+@media(max-width:760px){
+  .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+  .footer{padding:40px 20px 24px}
+}
+@media(max-width:460px){.footer-grid{grid-template-columns:1fr}}
+
+/* ─────────────────────────────────────────────
+   AD SLOT
+───────────────────────────────────────────── */
+.ad-slot{
+  max-width:1080px;margin:0 auto;padding:8px 40px;
+  min-height:90px;display:flex;align-items:center;justify-content:center;
+}
+
+/* ─────────────────────────────────────────────
+   WA FLOAT
+───────────────────────────────────────────── */
+.wa-float{
+  position:fixed;bottom:28px;right:28px;z-index:999;
+  width:54px;height:54px;border-radius:50%;
+  background:#25d366;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 24px rgba(37,211,102,0.35);
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.wa-float:hover{
+  transform:scale(1.1);
+  box-shadow:0 6px 32px rgba(37,211,102,0.5);
+}
+@media print{
+  .wa-float,.nav,.ad-slot{display:none}
+}
 </style>
 </head>
 <body>
-<div class="wrapper">
-  <!-- NAV -->
-  <nav style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:24px;gap:20px;flex-wrap:wrap;border-bottom:1px solid #2a2f2c;padding-bottom:16px;">
-    <a href="guia.html"     style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#5a6e5d;text-decoration:none" onmouseover="this.style.color='#b8e04a'" onmouseout="this.style.color='#5a6e5d'">Guía de Inversión</a>
-    <a href="glosario.html" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#5a6e5d;text-decoration:none" onmouseover="this.style.color='#b8e04a'" onmouseout="this.style.color='#5a6e5d'">Glosario</a>
-    <a href="blog.html"     style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#5a6e5d;text-decoration:none" onmouseover="this.style.color='#b8e04a'" onmouseout="this.style.color='#5a6e5d'">Blog</a>
-  </nav>
 
-  <header>
-    <div class="label-tag">Inversión Inmobiliaria</div>
-    <h1>Calculadora de<br><em>Rentabilidad</em></h1>
-    <p class="subtitle">// análisis completo · flujo de caja · retorno sobre capital</p>
-    <div style="margin-top:20px;display:flex;align-items:center;flex-wrap:wrap;gap:12px;">
-      <span style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3)">Moneda:</span>
-      <div class="moneda-toggle">
-        <button class="moneda-btn active" id="btn_clp" onclick="setMoneda('CLP')">$ CLP</button>
-        <button class="moneda-btn" id="btn_uf" onclick="setMoneda('UF')">UF</button>
-      </div>
-      <span class="currency-label" id="uf_ref_label"></span>
-    </div>
-  </header>
-
-  <!-- AD: TOP BANNER -->
-  <div style="margin-bottom:24px;text-align:center;min-height:90px;display:flex;align-items:center;justify-content:center;">
-    <ins class="adsbygoogle"
-         style="display:block;width:100%;min-height:90px;"
-         data-ad-client="ca-pub-2358850294363122"
-         data-ad-slot="auto"
-         data-ad-format="horizontal"
-         data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-brand">Prop<em>Tech</em> Chile</a>
+  <div class="nav-links">
+    <a href="index.html" class="active">Inicio</a>
+    <a href="calculadora.html">Calculadora</a>
+    <a href="guia.html" class="hide-m">Guía</a>
+    <a href="glosario.html" class="hide-m">Glosario</a>
+    <a href="blog.html" class="hide-m">Blog</a>
+    <a href="https://wa.me/56952504101?text=Hola%2C%20quiero%20información%20sobre%20sus%20servicios" target="_blank" class="nav-wa">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.85L.057 23.55a.75.75 0 00.918.918l5.7-1.471A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.743 9.743 0 012.25 12 9.743 9.743 0 0112 2.25 9.743 9.743 0 0121.75 12 9.743 9.743 0 0112 21.75z"/></svg>
+      WhatsApp
+    </a>
   </div>
+</nav>
 
-
-  <!-- SECCIÓN 1: PROPIEDAD -->
-  <div class="grid">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-icon">🏠</div>
-        <span class="panel-title">Precio & Financiamiento</span>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Precio de Compra</label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Precio total de compra de la propiedad, incluyendo estacionamiento y bodega si aplica.</span></button>
-        </div>
-        <div class="input-wrap">
-          <span class="input-prefix" id="prefix_precio">$</span>
-          <input type="number" id="precio" value="120000000" step="1000000">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Pie (%) <span class="badge">% del precio</span></label>
-        <div class="slider-row">
-          <input type="range" id="pieSlider" min="5" max="50" value="20" step="1" oninput="syncPie(this.value)">
-          <span class="range-val" id="pieSliderVal">20%</span>
-        </div>
-        <div class="input-wrap" style="margin-top:8px">
-          <span class="input-prefix" id="prefix_pie">$</span>
-          <input type="number" id="pie" value="24000000" step="500000" oninput="syncPieFromAmount()">
-        </div>
-      </div>
-
-      <div class="field">
-        <div class="sin-credito-wrap" onclick="toggleSinCredito()" id="sin_credito_wrap">
-          <div class="toggle-switch" id="sin_credito_switch"><div class="toggle-knob"></div></div>
-          <span class="sin-credito-label">Compra al contado (sin crédito / 100% pie)</span>
-        </div>
-        <label style="margin-top:12px">Monto del Crédito</label>
-        <div class="computed" id="credito_display">— — —</div>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Gastos Notariales & Escritura <span class="badge">aprox.</span></label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Notaría, inscripción conservador y otros. Estima entre 1% y 1.5% del precio de compra.</span></button>
-        </div>
-        <div class="input-wrap">
-          <span class="input-prefix" id="prefix_escritura">$</span>
-          <input type="number" id="gastos_escritura" value="1500000" step="100000">
-        </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-noise"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-tag">Santiago · Chile · 2025</div>
+      <h1>Inversión<br>inmobiliaria<br><em>con criterio</em></h1>
+      <p class="hero-sub">Asesoría profesional para comprar y arrendar con inteligencia. Fotografía inmobiliaria potenciada con IA. Herramientas de análisis gratuitas para el mercado chileno.</p>
+      <div class="hero-btns">
+        <a href="https://wa.me/56952504101?text=Hola%2C%20quiero%20asesoría%20inmobiliaria" target="_blank" class="btn-gold">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.85L.057 23.55a.75.75 0 00.918.918l5.7-1.471A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.743 9.743 0 012.25 12 9.743 9.743 0 0112 2.25 9.743 9.743 0 0121.75 12 9.743 9.743 0 0112 21.75z"/></svg>
+          Contactar ahora
+        </a>
+        <a href="#servicios" class="btn-outline">Ver servicios</a>
       </div>
     </div>
-
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-icon">📋</div>
-        <span class="panel-title">Condiciones del Crédito</span>
-      </div>
-
-      <div class="credito-section" id="credito_section">
-        <div class="field">
-          <div class="field-label-row">
-            <label style="margin-bottom:0">Tasa Anual (%) <span class="badge">tasa efectiva</span></label>
-            <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Tasa de interés anual efectiva del crédito hipotecario. Rango actual en Chile: 4%–5.5% a tasa fija.</span></button>
-          </div>
-          <div class="input-wrap">
-            <input type="number" id="tasa" value="4.5" step="0.1">
-            <span class="input-suffix">% anual</span>
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="field-label-row">
-            <label style="margin-bottom:0">Plazo del Crédito</label>
-            <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Duración del crédito. A mayor plazo, menor dividendo pero más intereses totales. Típico: 20–30 años.</span></button>
-          </div>
-          <div class="input-wrap">
-            <input type="number" id="plazo" value="25" step="1" min="1" max="40">
-            <span class="input-suffix">años</span>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Dividendo Mensual Estimado</label>
-          <div class="computed" id="dividendo_display">— — —</div>
-        </div>
-
-        <div class="field">
-          <div class="field-label-row">
-            <label style="margin-bottom:0">Seguros Mensuales <span class="badge">desgravamen + sismo/incendio</span></label>
-            <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Seguro de desgravamen (cancela deuda en caso de fallecimiento) + seguro de sismo e incendio. Suma típica: $25.000–$60.000/mes.</span></button>
-          </div>
-          <div class="input-wrap">
-            <span class="input-prefix" id="prefix_seguros">$</span>
-            <input type="number" id="seguros" value="35000" step="1000">
-          </div>
+    <div class="hero-right">
+      <div class="hero-stat-card">
+        <div class="stat-num">01</div>
+        <div class="stat-info">
+          <div class="stat-title">Asesoría de Compra</div>
+          <div class="stat-sub">Evaluación, negociación y cierre de operaciones de compraventa</div>
         </div>
       </div>
-
-      <div class="field" id="sin_credito_msg" style="display:none">
-        <div style="padding:12px;background:rgba(184,224,74,0.08);border:1px solid rgba(184,224,74,0.2);font-size:11px;color:var(--accent2)">
-          ✓ Compra al contado — sin dividendo ni intereses. El flujo neto equivale al ingreso menos costos operativos.
+      <div class="hero-stat-card">
+        <div class="stat-num">02</div>
+        <div class="stat-info">
+          <div class="stat-title">Asesoría de Arriendo</div>
+          <div class="stat-sub">Valorización, contratos y administración con Ley 21.461</div>
+        </div>
+      </div>
+      <div class="hero-stat-card">
+        <div class="stat-num">03</div>
+        <div class="stat-info">
+          <div class="stat-title">Fotografía con IA</div>
+          <div class="stat-sub">Transformamos imágenes ordinarias en fotografías que venden</div>
+        </div>
+      </div>
+      <div class="hero-stat-card">
+        <div class="stat-num">∞</div>
+        <div class="stat-info">
+          <div class="stat-title">Calculadora Gratuita</div>
+          <div class="stat-sub">Cap Rate, TIR, ROE y flujo de caja en CLP o UF</div>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- SECCIÓN 2: ARRIENDO & COSTOS -->
-  <div class="grid">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-icon">💰</div>
-        <span class="panel-title">Ingresos por Arriendo</span>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Precio de Arriendo Mensual</label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Precio mensual de arriendo. Para estimar, revisa propiedades similares en Portalinmobiliario o Yapo.</span></button>
-        </div>
-        <div class="input-wrap">
-          <span class="input-prefix" id="prefix_arriendo">$</span>
-          <input type="number" id="arriendo" value="620000" step="10000">
-        </div>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Vacancia Esperada</label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Meses al año en que la propiedad estará desocupada. El estándar conservador es 1 mes/año (8.3% vacancia).</span></button>
-        </div>
-        <div class="input-wrap">
-          <input type="number" id="vacancia_meses" value="1" step="0.5" min="0" max="12">
-          <span class="input-suffix">mes/año</span>
-        </div>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Reajuste Anual Arriendo (%)</label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Aumento anual del arriendo. Históricamente ligado a IPC (~3%–4%). Contratos suelen reajustar por UF.</span></button>
-        </div>
-        <div class="input-wrap">
-          <input type="number" id="reajuste_arriendo" value="3.5" step="0.5">
-          <span class="input-suffix">% anual</span>
-        </div>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Plusvalía Anual Propiedad (%)</label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Apreciación anual estimada del valor de la propiedad. Santiago promedio histórico: 4%–7% anual real.</span></button>
-        </div>
-        <div class="input-wrap">
-          <input type="number" id="plusvalia" value="4.0" step="0.5">
-          <span class="input-suffix">% anual</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-icon">📊</div>
-        <span class="panel-title">Costos de Administración</span>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Corretaje / Gestión Mensual <span class="badge">% del arriendo</span></label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Comisión al corredor que gestiona el arriendo. Mercado: 8%–10% del arriendo mensual.</span></button>
-        </div>
-        <div class="input-wrap">
-          <input type="number" id="corretaje_pct" value="8" step="0.5" min="0">
-          <span class="input-suffix">%</span>
-        </div>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Contribuciones (Bien Raíz) Mensuales</label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Impuesto territorial mensual (SII). Para propiedades sobre ~$77M, aplica tasa de 1.2% anual.</span></button>
-        </div>
-        <div class="input-wrap">
-          <span class="input-prefix" id="prefix_contribuciones">$</span>
-          <input type="number" id="contribuciones" value="50000" step="5000">
-        </div>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Gastos Comunes Mensuales</label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Gastos del edificio/condominio que paga el propietario cuando está desocupado (y a veces siempre).</span></button>
-        </div>
-        <div class="input-wrap">
-          <span class="input-prefix" id="prefix_gastos_comunes">$</span>
-          <input type="number" id="gastos_comunes" value="45000" step="5000">
-        </div>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Mantención & Reparaciones Anuales</label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Reserva anual para reparaciones: pintura, gasfitería, desperfectos. Regla: 0.5%–1% del valor de la propiedad.</span></button>
-        </div>
-        <div class="input-wrap">
-          <span class="input-prefix" id="prefix_mantencion">$</span>
-          <input type="number" id="mantencion" value="300000" step="50000">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECCIÓN 3: IMPUESTOS & HORIZONTE -->
-  <div class="grid">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-icon">⏱️</div>
-        <span class="panel-title">Horizonte de Inversión & Tributario</span>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Horizonte de Análisis</label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Número de años a proyectar. La rentabilidad mejora en el tiempo por reajuste de arriendo y plusvalía.</span></button>
-        </div>
-        <div class="input-wrap">
-          <input type="number" id="horizonte" value="10" step="1" min="1" max="40">
-          <span class="input-suffix">años</span>
-        </div>
-      </div>
-
-      <div class="field">
-        <div class="field-label-row">
-          <label style="margin-bottom:0">Tasa Impuesto Renta Arrendamiento (%)</label>
-          <button class="tip-btn" tabindex="-1">?<span class="tip-popup">Si declaras el arriendo como renta, aplica tu tasa marginal. Muchos propietarios están exentos bajo cierto tramo.</span></button>
-        </div>
-        <div class="input-wrap">
-          <input type="number" id="impuesto" value="0" step="1" min="0" max="40">
-          <span class="input-suffix">%</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel" style="display:flex;align-items:center;justify-content:center;">
-      <div style="text-align:center;">
-        <div style="font-size:32px;margin-bottom:16px;opacity:0.5;">⚡</div>
-        <button class="calc-btn" onclick="calcular()">Calcular Rentabilidad</button>
-        <p style="font-size:10px;color:var(--text3);margin-top:12px;letter-spacing:0.08em;">Presiona para actualizar los resultados</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- RESULTADOS -->
-  <div id="results_section" style="display:none">
-
-    <div class="results-panel">
-      <div class="results-header">
-        <span class="results-title">Resumen de Rentabilidad</span>
-        <div style="display:flex;align-items:center;gap:12px;">
-          <span style="font-size:10px;color:var(--text3);letter-spacing:0.08em;" id="result_subtitle">— — —</span>
-          <button class="print-btn" onclick="window.print()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-              <rect x="6" y="14" width="12" height="8"/>
-            </svg>
-            Imprimir / PDF
-          </button>
-        </div>
-      </div>
-
-      <div class="metrics" id="metrics_grid"></div>
-    </div>
-
-    <!-- GAUGE SEMÁFORO -->
-    <div class="gauge-panel" id="gauge_panel" style="display:none"></div>
-
-    <!-- RESUMEN NARRATIVO -->
-    <div class="resumen-panel" id="resumen_panel" style="display:none"></div>
-
-    <!-- PUNTO DE EQUILIBRIO -->
-    <div class="breakeven-panel" id="breakeven_panel" style="display:none"></div>
-
-    <div class="breakdown" id="breakdown_tables"></div>
-
-    <div class="amort-section" id="amort_section"></div>
-
-  </div>
-
-  <!-- AD: BELOW RESULTS -->
-  <div id="ad_below_results" style="display:none;margin-top:24px;text-align:center;min-height:90px;">
-    <ins class="adsbygoogle"
-         style="display:block;width:100%;min-height:90px;"
-         data-ad-client="ca-pub-2358850294363122"
-         data-ad-slot="auto"
-         data-ad-format="horizontal"
-         data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  </div>
-
-  <!-- EMPTY STATE -->
-  <div id="empty_state">
-    <div class="empty-state">
-      <div class="empty-icon">📐</div>
-      <div class="empty-text">Ingresa los datos y presiona <strong style="color:var(--accent)">Calcular Rentabilidad</strong></div>
-    </div>
-  </div>
-
+<!-- AD -->
+<div class="ad-slot">
+  <ins class="adsbygoogle" style="display:block;width:100%;min-height:90px;"
+    data-ad-client="ca-pub-2358850294363122" data-ad-slot="auto"
+    data-ad-format="horizontal" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
 </div>
 
-<script>
-
-// ── MONEDA STATE ──
-let MONEDA = 'CLP';   // 'CLP' | 'UF'
-let UF_VALOR = 38000; // valor UF por defecto, se intenta obtener en vivo
-let SIN_CREDITO = false;
-
-// Fetch UF value (Mindicador API)
-fetch('https://mindicador.cl/api/uf')
-  .then(r => r.json())
-  .then(d => {
-    UF_VALOR = d.serie[0].valor;
-    document.getElementById('uf_ref_label').textContent = `1 UF = $ ${Math.round(UF_VALOR).toLocaleString('es-CL')}`;
-  })
-  .catch(() => {
-    document.getElementById('uf_ref_label').textContent = `1 UF ≈ $ ${UF_VALOR.toLocaleString('es-CL')} (est.)`;
-  });
-
-function setMoneda(m) {
-  if (m === MONEDA) return;
-  const factor = m === 'UF' ? (1 / UF_VALOR) : UF_VALOR;
-  MONEDA = m;
-
-  // Toggle buttons
-  document.getElementById('btn_clp').classList.toggle('active', m === 'CLP');
-  document.getElementById('btn_uf').classList.toggle('active', m === 'UF');
-
-  // Fields to convert (id → step in UF mode)
-  const moneyFields = [
-    { id: 'precio',          stepCLP: 1000000,  stepUF: 10 },
-    { id: 'pie',             stepCLP: 500000,   stepUF: 5  },
-    { id: 'gastos_escritura',stepCLP: 100000,   stepUF: 1  },
-    { id: 'seguros',         stepCLP: 1000,     stepUF: 0.01 },
-    { id: 'arriendo',        stepCLP: 10000,    stepUF: 0.1  },
-    { id: 'contribuciones',  stepCLP: 5000,     stepUF: 0.1  },
-    { id: 'gastos_comunes',  stepCLP: 5000,     stepUF: 0.1  },
-    { id: 'mantencion',      stepCLP: 50000,    stepUF: 1    },
-  ];
-
-  moneyFields.forEach(f => {
-    const el = document.getElementById(f.id);
-    if (!el) return;
-    const val = parseFloat(el.value) || 0;
-    el.value = m === 'UF'
-      ? (val / UF_VALOR).toFixed(2)
-      : Math.round(val * UF_VALOR);
-    el.step = m === 'UF' ? f.stepUF : f.stepCLP;
-  });
-
-  // Update $ prefixes to UF
-  const prefixEls = document.querySelectorAll('[id^="prefix_"]');
-  prefixEls.forEach(el => { el.textContent = m === 'UF' ? 'UF' : '$'; });
-
-  // Update pie slider display
-  syncPieFromAmount();
-  updateComputed();
-
-  // Update placeholder tips (computed)
-  updateComputed();
-}
-
-function getValCLP(id) {
-  const v = parseFloat(document.getElementById(id).value) || 0;
-  return MONEDA === 'UF' ? v * UF_VALOR : v;
-}
-
-function fmtMoneda(n) {
-  if (MONEDA === 'UF') {
-    const uf = n / UF_VALOR;
-    return 'UF ' + uf.toFixed(2);
-  }
-  return '$ ' + Math.round(n).toLocaleString('es-CL');
-}
-
-function toggleSinCredito() {
-  SIN_CREDITO = !SIN_CREDITO;
-  const sw = document.getElementById('sin_credito_switch');
-  const sec = document.getElementById('credito_section');
-  const msg = document.getElementById('sin_credito_msg');
-  const slider = document.getElementById('pieSlider');
-
-  sw.classList.toggle('on', SIN_CREDITO);
-  sec.classList.toggle('oculto', SIN_CREDITO);
-  msg.style.display = SIN_CREDITO ? 'block' : 'none';
-
-  if (SIN_CREDITO) {
-    // Set pie = 100% of precio
-    slider.min = 100;
-    slider.max = 100;
-    slider.value = 100;
-    document.getElementById('pieSliderVal').textContent = '100%';
-    const precio = getValCLP('precio');
-    const el = document.getElementById('pie');
-    el.value = MONEDA === 'UF' ? (precio / UF_VALOR).toFixed(2) : Math.round(precio);
-    el.readOnly = true;
-    el.style.opacity = '0.5';
-  } else {
-    slider.min = 5;
-    slider.max = 100;
-    slider.value = 20;
-    document.getElementById('pieSliderVal').textContent = '20%';
-    const precio = getValCLP('precio');
-    const el = document.getElementById('pie');
-    el.value = MONEDA === 'UF' ? (precio * 0.2 / UF_VALOR).toFixed(2) : Math.round(precio * 0.2);
-    el.readOnly = false;
-    el.style.opacity = '1';
-  }
-  updateComputed();
-}
-
-// --- SYNC PIE ---
-function syncPie(val) {
-  if (SIN_CREDITO) return;
-  document.getElementById('pieSlider').value = val;
-  document.getElementById('pieSliderVal').textContent = val + '%';
-  const precioRaw = parseFloat(document.getElementById('precio').value) || 0;
-  const pie = MONEDA === 'UF' ? (precioRaw * val / 100).toFixed(2) : Math.round(precioRaw * val / 100);
-  document.getElementById('pie').value = pie;
-  updateComputed();
-}
-
-function syncPieFromAmount() {
-  const precio = parseFloat(document.getElementById('precio').value) || 1;
-  const pie = parseFloat(document.getElementById('pie').value) || 0;
-  const pct = Math.round((pie / precio) * 100);
-  document.getElementById('pieSlider').value = Math.min(pct, 50);
-  document.getElementById('pieSliderVal').textContent = Math.min(pct, 50) + '%';
-  updateComputed();
-}
-
-// --- DIVIDEND CALC ---
-function calcDividendo(capital, tasaAnual, años) {
-  const n = años * 12;
-  const r = tasaAnual / 100 / 12;
-  if (r === 0) return capital / n;
-  return capital * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
-}
-
-function fmt(n) {
-  return '$ ' + Math.round(n).toLocaleString('es-CL');
-}
-
-function fmtPct(n) {
-  return n.toFixed(2) + '%';
-}
-
-function updateComputed() {
-  const precio = getValCLP('precio');
-  const pie = getValCLP('pie');
-  const credito = SIN_CREDITO ? 0 : Math.max(0, precio - pie);
-  const tasa = parseFloat(document.getElementById('tasa').value) || 0;
-  const plazo = parseFloat(document.getElementById('plazo').value) || 1;
-  const dividendo = SIN_CREDITO ? 0 : calcDividendo(credito, tasa, plazo);
-  document.getElementById('credito_display').textContent = fmtMoneda(credito);
-  document.getElementById('dividendo_display').textContent = SIN_CREDITO ? '— sin crédito —' : fmtMoneda(dividendo);
-  if (SIN_CREDITO) {
-    // Keep pie in sync with precio at 100%
-    const el = document.getElementById('pie');
-    el.value = MONEDA === 'UF'
-      ? (precio / UF_VALOR).toFixed(2)
-      : Math.round(precio);
-  }
-}
-
-// Listeners
-['precio','pie','tasa','plazo'].forEach(id => {
-  document.getElementById(id).addEventListener('input', updateComputed);
-});
-document.getElementById('pieSlider').addEventListener('input', function() {
-  syncPie(this.value);
-});
-updateComputed();
-
-// --- MAIN CALC ---
-function calcular() {
-  const precio = getValCLP('precio');
-  const pie = getValCLP('pie');
-  const credito = SIN_CREDITO ? 0 : Math.max(0, precio - pie);
-  const tasa = parseFloat(document.getElementById('tasa').value) || 0;
-  const plazo = parseInt(document.getElementById('plazo').value) || 25;
-  const seguros = SIN_CREDITO ? 0 : getValCLP('seguros');
-  const gastosEscritura = getValCLP('gastos_escritura');
-
-  const arriendoBase = getValCLP('arriendo');
-  const vacanciaMeses = parseFloat(document.getElementById('vacancia_meses').value) || 0;
-  const reajusteArriendo = parseFloat(document.getElementById('reajuste_arriendo').value) || 0;
-  const plusvaliaPct = parseFloat(document.getElementById('plusvalia').value) || 0;
-
-  const corretajePct = parseFloat(document.getElementById('corretaje_pct').value) || 0;
-  const contribuciones = getValCLP('contribuciones');
-  const gastosComunes = getValCLP('gastos_comunes');
-  const mantencion = getValCLP('mantencion');
-
-  const horizonte = parseInt(document.getElementById('horizonte').value) || 10;
-  const impuesto = parseFloat(document.getElementById('impuesto').value) || 0;
-
-  // Inversión inicial total
-  const inversionInicial = pie + gastosEscritura;
-
-  // Dividendo
-  const dividendo = SIN_CREDITO ? 0 : calcDividendo(credito, tasa, plazo);
-  const dividendoTotal = dividendo + seguros;
-
-  // FLUJO ANUAL
-  let totalFlujoNeto = 0;
-  let totalIngresos = 0;
-  let totalEgresos = 0;
-  let totalIntereses = 0;
-  let totalAmortizacion = 0;
-  let saldoCredito = credito;
-  const r = tasa / 100 / 12;
-  const yearData = [];
-
-  for (let y = 1; y <= horizonte; y++) {
-    // Arriendo del año (con reajuste)
-    const arriendoAño = arriendoBase * Math.pow(1 + reajusteArriendo / 100, y - 1);
-    const mesesEfectivos = 12 - vacanciaMeses;
-    const ingresoArriendo = arriendoAño * mesesEfectivos;
-
-    // Impuesto
-    const impuestoAnual = ingresoArriendo * impuesto / 100;
-    const ingresoNeto = ingresoArriendo - impuestoAnual;
-
-    // Costos operativos
-    const costoCorretaje = arriendoAño * mesesEfectivos * corretajePct / 100;
-    const costoContribuciones = contribuciones * 12;
-    const costoGastoComunes = gastosComunes * 12;
-    const costoMantencion = mantencion;
-    const totalCostosOp = costoCorretaje + costoContribuciones + costoGastoComunes + costoMantencion;
-
-    // Dividendo + intereses del año
-    let interesesAño = 0;
-    let amortAño = 0;
-    for (let m = 0; m < 12; m++) {
-      const interesesMes = saldoCredito * r;
-      const amortMes = dividendo - interesesMes;
-      interesesAño += interesesMes;
-      amortAño += amortMes;
-      saldoCredito = Math.max(0, saldoCredito - amortMes);
-    }
-
-    const dividendoAnual = dividendoTotal * 12;
-    const flujoBruto = ingresoNeto - totalCostosOp;
-    const flujoNeto = flujoBruto - dividendoAnual + (seguros * 12); // seguros ya en dividendoTotal
-    const flujoNetoCorrecto = ingresoNeto - totalCostosOp - dividendoTotal * 12;
-
-    totalFlujoNeto += flujoNetoCorrecto;
-    totalIngresos += ingresoNeto;
-    totalEgresos += totalCostosOp + dividendoTotal * 12;
-    totalIntereses += interesesAño;
-    totalAmortizacion += amortAño;
-
-    yearData.push({
-      year: y,
-      arriendo: ingresoArriendo,
-      ingresoNeto,
-      costos: totalCostosOp,
-      dividendo: dividendoTotal * 12,
-      intereses: interesesAño,
-      amort: amortAño,
-      flujo: flujoNetoCorrecto,
-      saldo: saldoCredito,
-    });
-  }
-
-  // Valor final de la propiedad
-  const valorFinalPropiedad = precio * Math.pow(1 + plusvaliaPct / 100, horizonte);
-  const gananciaCapital = valorFinalPropiedad - precio;
-  const saldoCreditoFinal = saldoCredito;
-  const patrimonioFinal = valorFinalPropiedad - saldoCreditoFinal;
-  const patrimonioInicial = pie;
-
-  // RETORNOS
-  const retornoTotalSinPlusvalia = totalFlujoNeto;
-  const retornoTotal = totalFlujoNeto + gananciaCapital - saldoCreditoFinal + credito;
-
-  // Rentabilidad bruta (cap rate)
-  const ingresoAnualBase = arriendoBase * (12 - vacanciaMeses);
-  const capRate = (ingresoAnualBase / precio) * 100;
-
-  // ROI sobre equity
-  const roiEquity = ((patrimonioFinal - inversionInicial + totalFlujoNeto) / inversionInicial) * 100;
-
-  // Flujo caja mensual promedio año 1
-  const flujoCajaMes1 = yearData[0].flujo / 12;
-
-  // Cash on cash return (año 1)
-  const cashOnCash = (yearData[0].flujo / inversionInicial) * 100;
-
-  // TIR aproximada (simplificada)
-  const flujos = [-inversionInicial, ...yearData.map(d => d.flujo)];
-  flujos[flujos.length - 1] += patrimonioFinal; // valor residual
-  const tir = calcTIR(flujos);
-
-  // ===== EXTRA CALCS =====
-  const tirPct = tir !== null ? tir * 100 : null;
-
-  // Breakeven year (cumulative flow turns positive)
-  let beYear = null;
-  let cumFlow = 0;
-  for (const d of yearData) {
-    cumFlow += d.flujo;
-    if (beYear === null && cumFlow >= 0) { beYear = d.year; break; }
-  }
-
-  // ===== RENDER =====
-  document.getElementById('empty_state').style.display = 'none';
-  document.getElementById('ad_below_results').style.display = 'block';
-  document.getElementById('results_section').style.display = 'block';
-  document.getElementById('result_subtitle').textContent =
-    `horizonte ${horizonte} años · pie ${fmt(inversionInicial)} · crédito ${fmt(credito)}`;
-
-  // METRICS
-  const mGrid = document.getElementById('metrics_grid');
-  mGrid.innerHTML = '';
-
-  const metrics = [
-    {
-      label: 'Cap Rate Bruto',
-      value: fmtPct(capRate),
-      sub: 'rentabilidad sobre precio',
-      cls: capRate >= 5 ? 'good' : capRate >= 3.5 ? 'warn' : 'bad',
-      type: capRate >= 5 ? 'positive' : capRate >= 3.5 ? 'warning' : 'negative-m'
-    },
-    {
-      label: 'Cash on Cash (Año 1)',
-      value: fmtPct(cashOnCash),
-      sub: 'flujo / inversión inicial',
-      cls: cashOnCash >= 0 ? 'good' : 'bad',
-      type: cashOnCash >= 0 ? 'positive' : 'negative-m'
-    },
-    {
-      label: 'TIR Estimada',
-      value: tirPct !== null ? fmtPct(tirPct) : 'N/A',
-      sub: `sobre ${horizonte} años`,
-      cls: tirPct && tirPct >= 8 ? 'good' : tirPct && tirPct >= 4 ? 'warn' : 'bad',
-      type: tirPct && tirPct >= 8 ? 'positive' : tirPct && tirPct >= 4 ? 'warning' : 'negative-m'
-    },
-    {
-      label: 'ROE (Return on Equity)',
-      value: fmtPct(roiEquity),
-      sub: `retorno total sobre equity · ${horizonte} años`,
-      cls: roiEquity >= 50 ? 'good' : roiEquity >= 0 ? 'warn' : 'bad',
-      type: roiEquity >= 50 ? 'positive' : roiEquity >= 0 ? 'warning' : 'negative-m'
-    },
-    {
-      label: 'Flujo Caja Mes (Año 1)',
-      value: fmtMoneda(flujoCajaMes1),
-      sub: 'después de dividendo y costos',
-      cls: flujoCajaMes1 >= 0 ? 'good' : 'bad',
-      type: flujoCajaMes1 >= 0 ? 'positive' : 'negative-m'
-    },
-    {
-      label: 'Patrimonio Final',
-      value: fmtMoneda(patrimonioFinal),
-      sub: `propiedad − saldo crédito`,
-      cls: 'neutral',
-      type: 'highlight'
-    },
-    {
-      label: 'Valor Propiedad Final',
-      value: fmtMoneda(valorFinalPropiedad),
-      sub: `plusvalía ${fmtPct(plusvaliaPct)} / año`,
-      cls: 'neutral',
-      type: ''
-    },
-    {
-      label: 'Saldo Crédito Final',
-      value: fmtMoneda(saldoCreditoFinal),
-      sub: `deuda restante al año ${horizonte}`,
-      cls: 'warn',
-      type: 'warning'
-    },
-  ];
-
-  metrics.forEach(m => {
-    const div = document.createElement('div');
-    div.className = `metric ${m.type}`;
-    div.innerHTML = `
-      <div class="metric-label">${m.label}</div>
-      <div class="metric-value ${m.cls}">${m.value}</div>
-      <div class="metric-sub">${m.sub}</div>
-    `;
-    mGrid.appendChild(div);
-  });
-
-  // ── GAUGE + RESUMEN + BREAKEVEN ──
-  renderGauge(capRate, tirPct, cashOnCash);
-  const beYearResult = renderBreakeven(yearData, inversionInicial, horizonte);
-  renderResumen({
-    precio, pie, credito, inversionInicial, arriendoBase,
-    flujoCajaMes1, capRate, tir, tirPct, roiEquity,
-    patrimonioFinal, valorFinalPropiedad, totalFlujoNeto,
-    horizonte, dividendoTotal, beYear: beYearResult, yearData,
-    saldoCreditoFinal, plusvaliaPct
-  });
-
-  // BREAKDOWN TABLES
-  const bTables = document.getElementById('breakdown_tables');
-  const costoCorretaje1 = arriendoBase * (12 - vacanciaMeses) * corretajePct / 100;
-
-  bTables.innerHTML = `
-    <div class="table-panel">
-      <div class="table-title">// Flujo Mensual Promedio (Año 1)</div>
-      <div class="row"><span class="row-label">Arriendo bruto mensual</span><span class="row-value pos">${fmtMoneda(arriendoBase)}</span></div>
-      <div class="row"><span class="row-label">Vacancia (prorrateada)</span><span class="row-value neg">− ${fmtMoneda(arriendoBase * vacanciaMeses / 12)}</span></div>
-      <div class="row"><span class="row-label">Impuesto arriendo</span><span class="row-value neg">− ${fmtMoneda(arriendoBase * (12 - vacanciaMeses) / 12 * impuesto / 100)}</span></div>
-      <div class="row"><span class="row-label">Corretaje/Gestión (${corretajePct}%)</span><span class="row-value neg">− ${fmtMoneda(costoCorretaje1 / 12)}</span></div>
-      <div class="row"><span class="row-label">Contribuciones</span><span class="row-value neg">− ${fmtMoneda(contribuciones)}</span></div>
-      <div class="row"><span class="row-label">Gastos Comunes</span><span class="row-value neg">− ${fmtMoneda(gastosComunes)}</span></div>
-      <div class="row"><span class="row-label">Mantención (prorrateada)</span><span class="row-value neg">− ${fmtMoneda(mantencion / 12)}</span></div>
-      <div class="row"><span class="row-label">Dividendo + Seguros</span><span class="row-value neg">− ${fmtMoneda(dividendoTotal)}</span></div>
-      <div class="row total"><span class="row-label">Flujo Neto Mensual</span><span class="row-value ${flujoCajaMes1 >= 0 ? 'pos' : 'neg'} accent">${fmtMoneda(flujoCajaMes1)}</span></div>
-    </div>
-
-    <div class="table-panel">
-      <div class="table-title">// Inversión Inicial & Resumen</div>
-      <div class="row"><span class="row-label">Precio de compra</span><span class="row-value">${fmtMoneda(precio)}</span></div>
-      <div class="row"><span class="row-label">Pie pagado</span><span class="row-value neg">− ${fmtMoneda(pie)}</span></div>
-      <div class="row"><span class="row-label">Gastos escritura/notaría</span><span class="row-value neg">− ${fmtMoneda(gastosEscritura)}</span></div>
-      <div class="row total"><span class="row-label">Capital inicial invertido</span><span class="row-value accent">${fmtMoneda(inversionInicial)}</span></div>
-      <div class="row"><span class="row-label">Total ingresos (${horizonte} años)</span><span class="row-value pos">${fmtMoneda(totalIngresos)}</span></div>
-      <div class="row"><span class="row-label">Total egresos operativos</span><span class="row-value neg">− ${fmtMoneda(totalEgresos - yearData.reduce((a, d) => a + d.dividendo, 0))}</span></div>
-      <div class="row"><span class="row-label">Total dividendos pagados</span><span class="row-value neg">− ${fmtMoneda(yearData.reduce((a, d) => a + d.dividendo, 0))}</span></div>
-      <div class="row total"><span class="row-label">Flujo neto total acumulado</span><span class="row-value ${totalFlujoNeto >= 0 ? 'pos' : 'neg'} accent">${fmtMoneda(totalFlujoNeto)}</span></div>
-    </div>
-  `;
-
-  // AMORT TABLE
-  const amortSec = document.getElementById('amort_section');
-  let rows = '';
-  yearData.forEach(d => {
-    const cls = d.flujo >= 0 ? 'td-pos' : 'td-neg';
-    rows += `<tr>
-      <td>Año ${d.year}</td>
-      <td>${fmtMoneda(d.arriendo)}</td>
-      <td>${fmtMoneda(d.costos)}</td>
-      <td>${fmtMoneda(d.dividendo)}</td>
-      <td>${fmtMoneda(d.intereses)}</td>
-      <td>${fmtMoneda(d.amort)}</td>
-      <td class="${cls}">${fmtMoneda(d.flujo)}</td>
-      <td>${fmtMoneda(d.saldo)}</td>
-    </tr>`;
-  });
-
-  amortSec.innerHTML = `
-    <div class="amort-title">// Proyección Anual Detallada</div>
-    <div class="amort-table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Año</th>
-            <th>Ingreso Arriendo</th>
-            <th>Costos Op.</th>
-            <th>Dividendo</th>
-            <th>Intereses</th>
-            <th>Amortización</th>
-            <th>Flujo Neto</th>
-            <th>Saldo Crédito</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-  `;
-}
-
-
-// ── RENDER GAUGE SEMÁFORO ──
-function renderGauge(capRate, tirPct, cashOnCash) {
-  const panel = document.getElementById('gauge_panel');
-  panel.style.display = 'block';
-
-  function gaugeBar(value, min, goodMin, warnMin, max) {
-    const pct = Math.min(100, Math.max(0, ((value - min) / (max - min)) * 100));
-    let color, semCls;
-    if (value >= goodMin)      { color = 'var(--positive)'; semCls = 'sem-green'; }
-    else if (value >= warnMin) { color = 'var(--accent3)';  semCls = 'sem-yellow'; }
-    else                        { color = 'var(--negative)'; semCls = 'sem-red'; }
-    return { pct, color, semCls };
-  }
-
-  const g1 = gaugeBar(capRate,    0, 5,   3.5, 10);
-  const g2 = gaugeBar(tirPct,     0, 8,   4,   20);
-  const g3 = gaugeBar(cashOnCash,-10, 2,   0,   15);
-
-  const items = [
-    {
-      name: 'Cap Rate Bruto',
-      value: fmtPct(capRate),
-      hint: 'Bueno ≥5% · Regular 3.5–5% · Bajo <3.5%',
-      g: g1,
-      cls: capRate >= 5 ? 'good' : capRate >= 3.5 ? 'warn' : 'bad',
-      labels: ['0%','5%','10%'],
-    },
-    {
-      name: 'TIR Estimada',
-      value: tirPct !== null ? fmtPct(tirPct) : 'N/A',
-      hint: 'Excelente ≥8% · Aceptable 4–8% · Bajo <4%',
-      g: g2,
-      cls: tirPct >= 8 ? 'good' : tirPct >= 4 ? 'warn' : 'bad',
-      labels: ['0%','8%','20%'],
-    },
-    {
-      name: 'Cash on Cash (Año 1)',
-      value: fmtPct(cashOnCash),
-      hint: 'Positivo ≥2% · Break-even 0–2% · Negativo <0%',
-      g: g3,
-      cls: cashOnCash >= 2 ? 'good' : cashOnCash >= 0 ? 'warn' : 'bad',
-      labels: ['-10%','0%','15%'],
-    },
-  ];
-
-  panel.innerHTML = '<div class="gauge-panel-title">// Evaluación de Rentabilidad — Semáforo</div>' +
-    items.map(item => `
-      <div class="gauge-item">
-        <div class="gauge-item-header">
-          <span class="gauge-item-name">${item.name}</span>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="gauge-item-value ${item.cls}">${item.value}</span>
-            <span class="semaforo ${item.g.semCls}"></span>
-          </div>
-        </div>
-        <div class="gauge-track">
-          <div class="gauge-fill" style="width:${item.g.pct}%;background:${item.g.color}"></div>
-        </div>
-        <div class="gauge-labels">
-          <span>${item.labels[0]}</span><span>${item.labels[1]}</span><span>${item.labels[2]}</span>
-        </div>
-        <div style="font-size:9px;color:var(--text3);margin-top:2px;letter-spacing:0.06em">${item.hint}</div>
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="sw">
+    <div class="sec-tag">Servicios</div>
+    <h2 class="sec-title">Todo lo que necesitas<br>para <em>invertir bien</em></h2>
+    <p class="sec-sub">Tres servicios complementarios para acompañarte desde la búsqueda hasta la presentación de tu propiedad.</p>
+    <div class="services">
+      <div class="svc">
+        <div class="svc-num">01</div>
+        <div class="svc-icon">🏠</div>
+        <div class="svc-title">Asesoría de Compra</div>
+        <p class="svc-desc">Te acompañamos en todo el proceso: evaluar rentabilidad, buscar la propiedad correcta y cerrar en las mejores condiciones.</p>
+        <ul class="svc-list">
+          <li>Análisis de rentabilidad (Cap Rate, TIR, ROE)</li>
+          <li>Búsqueda y filtro de propiedades</li>
+          <li>Negociación del precio y condiciones</li>
+          <li>Revisión legal y coordinación notarial</li>
+        </ul>
+        <a href="https://wa.me/56952504101?text=Hola%2C%20quiero%20asesoría%20para%20comprar%20una%20propiedad" target="_blank" class="svc-cta">Consultar →</a>
       </div>
-    `).join('');
-}
+      <div class="svc">
+        <div class="svc-num">02</div>
+        <div class="svc-icon">🔑</div>
+        <div class="svc-title">Asesoría de Arriendo</div>
+        <p class="svc-desc">Maximiza tus ingresos con el precio correcto, el arrendatario adecuado y un contrato que te proteja.</p>
+        <ul class="svc-list">
+          <li>Valorización del precio de arriendo</li>
+          <li>Publicación en portales especializados</li>
+          <li>Evaluación de arrendatarios</li>
+          <li>Contrato Ley 21.461 y garantías</li>
+        </ul>
+        <a href="https://wa.me/56952504101?text=Hola%2C%20quiero%20asesoría%20para%20arrendar%20mi%20propiedad" target="_blank" class="svc-cta">Consultar →</a>
+      </div>
+      <div class="svc" id="fotos">
+        <div class="svc-num">03</div>
+        <div class="svc-icon">📸</div>
+        <div class="svc-title">Fotografía con IA</div>
+        <p class="svc-desc">Transformamos tus fotos en imágenes de alto impacto. Más visitas, menos días en el mercado.</p>
+        <ul class="svc-list">
+          <li>Corrección de iluminación y color</li>
+          <li>Virtual staging (amoblado digital)</li>
+          <li>Cielos y exteriores mejorados</li>
+          <li>Entrega en 24 horas</li>
+        </ul>
+        <a href="https://wa.me/56952504101?text=Hola%2C%20quiero%20mejorar%20las%20fotografías%20de%20mi%20propiedad" target="_blank" class="svc-cta">Enviar fotos →</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-// ── RENDER RESUMEN NARRATIVO ──
-function renderResumen(data) {
-  const panel = document.getElementById('resumen_panel');
-  panel.style.display = 'block';
+<!-- FOTO SLIDER -->
+<section class="photo-section" id="fotografia">
+  <div class="photo-inner">
+    <div class="photo-copy">
+      <div class="photo-badge">Potenciado con IA</div>
+      <h2>Fotografías que<br><em>venden más rápido</em></h2>
+      <p>El 95% de los compradores busca online. La primera imagen decide el clic. Nuestra herramienta transforma fotos oscuras o poco atractivas en imágenes profesionales que generan más visitas.</p>
+      <div class="photo-metrics">
+        <div class="pm"><div class="pm-val">+40%</div><div class="pm-lbl">más visitas con fotos mejoradas</div></div>
+        <div class="pm"><div class="pm-val">−30%</div><div class="pm-lbl">días en el mercado</div></div>
+        <div class="pm"><div class="pm-val">24h</div><div class="pm-lbl">tiempo de entrega</div></div>
+        <div class="pm"><div class="pm-val">IA</div><div class="pm-lbl">tecnología propia</div></div>
+      </div>
+      <a href="https://wa.me/56952504101?text=Hola%2C%20quiero%20mejorar%20las%20fotos%20de%20mi%20propiedad%20con%20IA" target="_blank" class="btn-gold">Mejorar mis fotos</a>
+    </div>
 
-  const {
-    precio, pie, credito, inversionInicial, arriendoBase,
-    flujoCajaMes1, capRate, tir, tirPct, roiEquity,
-    patrimonioFinal, valorFinalPropiedad, totalFlujoNeto,
-    horizonte, dividendoTotal, beYear, yearData, saldoCreditoFinal,
-    plusvaliaPct
-  } = data;
+    <!-- SLIDER INTERACTIVO -->
+    <div>
+      <div class="slider-wrap" id="photoSlider">
+        <img class="slider-img before" src="https://roiprop.vercel.app/foto1.jpg" alt="Foto original sin editar" draggable="false">
+        <img class="slider-img after"  src="https://roiprop.vercel.app/foto2.png" alt="Foto mejorada con IA" draggable="false" id="sliderAfter">
+        <div class="slider-line" id="sliderLine"></div>
+        <div class="slider-handle" id="sliderHandle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round">
+            <path d="M8 4l-4 8 4 8M16 4l4 8-4 8"/>
+          </svg>
+        </div>
+        <div class="slider-label before-lbl">Original</div>
+        <div class="slider-label after-lbl">Con IA ✦</div>
+      </div>
+      <p style="font-size:10px;color:var(--text3);margin-top:10px;text-align:center;letter-spacing:0.06em">← Arrastra para comparar →</p>
+    </div>
+  </div>
+</section>
 
-  const flujoMes1 = Math.round(flujoCajaMes1);
-  const signo = flujoMes1 >= 0 ? 'positivo' : 'negativo';
-  const clsFlujo = flujoMes1 >= 0 ? 'hi-green' : 'hi-red';
+<!-- PROCESO -->
+<section>
+  <div class="sw">
+    <div class="sec-tag">Proceso</div>
+    <h2 class="sec-title">Simple y <em>directo</em></h2>
+    <div class="process">
+      <div class="proc-step"><div class="proc-n">01</div><div class="proc-title">Contáctanos por WhatsApp</div><div class="proc-desc">Cuéntanos tu objetivo. Respondemos en menos de 1 hora hábil.</div></div>
+      <div class="proc-step"><div class="proc-n">02</div><div class="proc-title">Diagnóstico gratuito</div><div class="proc-desc">Analizamos tu caso: presupuesto, zona, rentabilidad esperada o fotos.</div></div>
+      <div class="proc-step"><div class="proc-n">03</div><div class="proc-title">Propuesta a medida</div><div class="proc-desc">Plan de acción con opciones, costos y tiempos. Sin compromisos.</div></div>
+      <div class="proc-step"><div class="proc-n">04</div><div class="proc-title">Ejecución y entrega</div><div class="proc-desc">Te acompañamos hasta cerrar la operación o recibir tus imágenes.</div></div>
+    </div>
+  </div>
+</section>
 
-  let beText = '';
-  if (beYear) {
-    beText = `El flujo de caja acumulado se vuelve positivo en el <strong class="hi-acc">año ${beYear}</strong>, punto a partir del cual la inversión comienza a retornar capital.`;
-  } else {
-    beText = `Dentro del horizonte de ${horizonte} años, <strong class="hi-red">el flujo acumulado no alcanza el punto de equilibrio</strong>; el retorno dependería principalmente de la plusvalía al vender.`;
+<!-- AD MID -->
+<div class="ad-slot">
+  <ins class="adsbygoogle" style="display:block;width:100%;min-height:90px;"
+    data-ad-client="ca-pub-2358850294363122" data-ad-slot="auto"
+    data-ad-format="horizontal" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+</div>
+
+<!-- TOOL PROMO -->
+<div class="tool-strip">
+  <div class="tool-strip-inner">
+    <div class="tool-strip-text">
+      <div class="t-tag">Herramienta gratuita</div>
+      <h2>Calculadora de <em style="font-style:italic;color:var(--gold2)">Rentabilidad</em></h2>
+      <p>Cap Rate · TIR · ROE · Flujo de caja · Punto de equilibrio · CLP o UF</p>
+    </div>
+    <div class="tool-strip-btns">
+      <a href="calculadora.html" class="btn-gold" style="text-align:center;justify-content:center">Abrir Calculadora →</a>
+      <a href="guia.html" class="btn-outline" style="text-align:center;justify-content:center">Guía de Inversión</a>
+    </div>
+  </div>
+</div>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="cta-final-glow"></div>
+  <div class="cta-final-inner">
+    <div class="sec-tag" style="justify-content:center;margin-bottom:24px">Primera consulta sin costo</div>
+    <h2 class="cta-final"><em>¿Listo</em> para tu<br>próxima inversión?</h2>
+    <p>Respondemos en menos de 1 hora. Contáctanos por WhatsApp y cuéntanos qué necesitas.</p>
+    <a href="https://wa.me/56952504101?text=Hola%2C%20quiero%20información%20sobre%20sus%20servicios%20inmobiliarios" target="_blank" class="btn-gold" style="font-size:11px;padding:15px 36px;margin:0 auto">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.85L.057 23.55a.75.75 0 00.918.918l5.7-1.471A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.743 9.743 0 012.25 12 9.743 9.743 0 0112 2.25 9.743 9.743 0 0121.75 12 9.743 9.743 0 0112 21.75z"/></svg>
+      Escribir por WhatsApp
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">PropTech Chile</div>
+        <p class="footer-tagline">Asesoría inmobiliaria moderna para compra, arriendo y presentación de propiedades. Basados en Santiago, disponibles en todo Chile.</p>
+        <a href="https://wa.me/56952504101?text=Hola%2C%20quiero%20información%20sobre%20sus%20servicios" target="_blank" class="wa-btn-footer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.85L.057 23.55a.75.75 0 00.918.918l5.7-1.471A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.743 9.743 0 012.25 12 9.743 9.743 0 0112 2.25 9.743 9.743 0 0121.75 12 9.743 9.743 0 0112 21.75z"/></svg>
+          +56 9 5250 4101
+        </a>
+      </div>
+      <div>
+        <div class="footer-col-title">Servicios</div>
+        <div class="footer-links">
+          <a href="#asesoria">Asesoría Compra</a>
+          <a href="#asesoria">Asesoría Arriendo</a>
+          <a href="#fotos">Fotografía con IA</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Herramientas</div>
+        <div class="footer-links">
+          <a href="calculadora.html">Calculadora</a>
+          <a href="guia.html">Guía de Inversión</a>
+          <a href="glosario.html">Glosario</a>
+          <a href="blog.html">Blog</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <div class="footer-links">
+          <a href="privacidad.html">Privacidad</a>
+          <a href="terminos.html">Términos</a>
+          <a href="acerca.html">Acerca de</a>
+          <a href="disclaimer.html">Disclaimer</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 PropTech Chile · Santiago de Chile</span>
+      <span>Diseño y desarrollo · PropTech Chile</span>
+    </div>
+  </div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/56952504101?text=Hola%2C%20quiero%20información%20sobre%20sus%20servicios" target="_blank" class="wa-float" title="WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.85L.057 23.55a.75.75 0 00.918.918l5.7-1.471A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.743 9.743 0 012.25 12 9.743 9.743 0 0112 2.25 9.743 9.743 0 0121.75 12 9.743 9.743 0 0112 21.75z"/>
+  </svg>
+</a>
+
+<script>
+// ── PHOTO COMPARISON SLIDER ──
+(function() {
+  const wrap   = document.getElementById('photoSlider');
+  const after  = document.getElementById('sliderAfter');
+  const line   = document.getElementById('sliderLine');
+  const handle = document.getElementById('sliderHandle');
+  let dragging = false;
+
+  function setPos(x) {
+    const rect = wrap.getBoundingClientRect();
+    let pct = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
+    const p = (pct * 100).toFixed(1);
+    after.style.clipPath  = `inset(0 ${(100 - pct * 100).toFixed(1)}% 0 0)`;
+    line.style.left       = p + '%';
+    handle.style.left     = p + '%';
   }
 
-  const roeCls = roiEquity >= 50 ? 'hi-green' : roiEquity >= 0 ? '' : 'hi-red';
-  const roeVal = roiEquity.toFixed(1) + '%';
+  // Init at 50%
+  after.style.clipPath = 'inset(0 50% 0 0)';
 
-  const capCls  = capRate >= 5 ? 'hi-green' : capRate >= 3.5 ? '' : 'hi-red';
-  const tirText = tirPct !== null
-    ? `La <strong>TIR estimada es <span class="${tirPct >= 8 ? 'hi-green' : tirPct >= 4 ? '' : 'hi-red'}">${tirPct.toFixed(2)}%</span></strong>, considerando el valor de venta al año ${horizonte}.`
-    : 'La TIR no pudo calcularse con los parámetros actuales.';
-
-  const leverage = (precio / inversionInicial).toFixed(1);
-
-  panel.innerHTML = `
-    <div class="resumen-label">// Diagnóstico en Lenguaje Natural</div>
-    <div class="resumen-text">
-      Estás adquiriendo una propiedad de <strong>${fmtMoneda(precio)}</strong> con un pie de <strong>${fmtMoneda(pie)}</strong>
-      y un crédito de <strong>${fmtMoneda(credito)}</strong>, lo que representa un <strong>apalancamiento de ${leverage}x</strong>
-      sobre tu capital inicial de <strong>${fmtMoneda(inversionInicial)}</strong> (pie + gastos).<br><br>
-
-      El arriendo genera <strong>${fmtMoneda(arriendoBase)}/mes</strong> bruto frente a un dividendo total de
-      <strong>${fmtMoneda(dividendoTotal)}/mes</strong>. El flujo neto del primer año es
-      <strong class="${clsFlujo}">${fmtMoneda(flujoMes1)}/mes</strong> — un resultado <strong>${signo}</strong>
-      que indica que la propiedad <strong>${flujoMes1 >= 0 ? 'se autofinancia desde el inicio' : 'requiere aporte de bolsillo mensual'}</strong>.<br><br>
-
-      El <strong>Cap Rate bruto es <span class="${capCls}">${fmtPct(capRate)}</span></strong>
-      (${capRate >= 5 ? 'sobre el umbral recomendado de 5%' : capRate >= 3.5 ? 'en rango aceptable, por debajo del 5% ideal' : 'bajo el mínimo recomendado de 3.5%'}).
-      ${tirText}<br><br>
-
-      ${beText}<br><br>
-
-      Al cabo de <strong>${horizonte} años</strong>, el patrimonio neto estimado es
-      <strong class="hi-green">${fmtMoneda(patrimonioFinal)}</strong>
-      (propiedad valuada en ${fmtMoneda(valorFinalPropiedad)} menos saldo deuda de ${fmtMoneda(saldoCreditoFinal)}),
-      con un ROE total de <strong class="${roeCls}">${roeVal}</strong> sobre el capital invertido.
-    </div>
-  `;
-}
-
-// ── RENDER BREAKEVEN ──
-function renderBreakeven(yearData, inversionInicial, horizonte) {
-  const panel = document.getElementById('breakeven_panel');
-  panel.style.display = 'flex';
-
-  // Cumulative net flow
-  let cumulative = [];
-  let cum = 0;
-  let beYear = null;
-  yearData.forEach(d => {
-    cum += d.flujo;
-    cumulative.push(cum);
-    if (beYear === null && cum >= 0) beYear = d.year;
-  });
-
-  const maxAbs = Math.max(...cumulative.map(Math.abs), 1);
-
-  const bars = yearData.map((d, i) => {
-    const val = cumulative[i];
-    const h = Math.max(4, Math.round((Math.abs(val) / maxAbs) * 28));
-    const isBe = (i + 1) === beYear;
-    const cls = val >= 0 ? 'pos-bar' : 'neg-bar';
-    return `<div class="be-bar ${cls}${isBe ? ' be-mark' : ''}" style="height:${h}px" title="Año ${d.year}: ${fmtMoneda(val)}"></div>`;
-  }).join('');
-
-  const lbls = yearData.map((d, i) =>
-    `<div class="be-bar-lbl">${(i + 1) % 2 === 1 ? d.year : ''}</div>`
-  ).join('');
-
-  const beLabel = beYear
-    ? `Año ${beYear}`
-    : `>${horizonte} años`;
-  const beSub = beYear
-    ? `El flujo acumulado supera $0 en el año ${beYear}`
-    : `No alcanza equilibrio en el horizonte analizado`;
-
-  panel.innerHTML = `
-    <div class="be-icon">⚖️</div>
-    <div class="be-content">
-      <div class="be-label">// Punto de Equilibrio (Flujo Acumulado)</div>
-      <div class="be-value">${beLabel}</div>
-      <div class="be-sub">${beSub}</div>
-    </div>
-    <div class="be-timeline">
-      <div style="font-size:9px;color:var(--text3);letter-spacing:0.08em;margin-bottom:4px">Flujo acumulado por año — <span style="color:var(--negative)">■</span> negativo · <span style="color:var(--positive)">■</span> positivo · <span style="color:var(--accent)">□</span> equilibrio</div>
-      <div class="be-bar-wrap">${bars}</div>
-      <div class="be-bar-labels">${lbls}</div>
-    </div>
-  `;
-
-  return beYear;
-}
-
-// TIR (Newton-Raphson)
-function calcTIR(flujos) {
-  let r = 0.08;
-  for (let i = 0; i < 200; i++) {
-    let npv = 0, dnpv = 0;
-    for (let t = 0; t < flujos.length; t++) {
-      npv += flujos[t] / Math.pow(1 + r, t);
-      dnpv -= t * flujos[t] / Math.pow(1 + r, t + 1);
-    }
-    if (Math.abs(dnpv) < 1e-10) return null;
-    const nr = r - npv / dnpv;
-    if (Math.abs(nr - r) < 1e-8) return nr;
-    r = nr;
-    if (r < -0.99 || r > 100) return null;
-  }
-  return null;
-}
-
-
-// ═══════════════════════════════════════════
-// Initial computed update
-updateComputed();
+  wrap.addEventListener('mousedown',  e => { dragging = true; setPos(e.clientX); e.preventDefault(); });
+  wrap.addEventListener('touchstart', e => { dragging = true; setPos(e.touches[0].clientX); }, {passive:true});
+  window.addEventListener('mousemove',  e => { if(dragging) setPos(e.clientX); });
+  window.addEventListener('touchmove',  e => { if(dragging) setPos(e.touches[0].clientX); }, {passive:true});
+  window.addEventListener('mouseup',  () => dragging = false);
+  window.addEventListener('touchend', () => dragging = false);
+})();
 </script>
 
-  <!-- FOOTER -->
-  <footer style="margin-top:60px;padding:24px 0 0;border-top:1px solid #2a2f2c;font-family:'DM Mono',monospace;font-size:10px;color:#5a6e5d;letter-spacing:0.08em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;position:relative;z-index:1;">
-    <span>© 2025 Calculadora de Rentabilidad Inmobiliaria · Chile</span>
-    <span style="display:flex;gap:12px;flex-wrap:wrap;">
-      <a href="privacidad.html" style="color:#5a6e5d;text-decoration:none;" onmouseover="this.style.color='#b8e04a'" onmouseout="this.style.color='#5a6e5d'">Privacidad</a>
-      <a href="terminos.html"   style="color:#5a6e5d;text-decoration:none;" onmouseover="this.style.color='#b8e04a'" onmouseout="this.style.color='#5a6e5d'">Términos</a>
-      <a href="acerca.html"     style="color:#5a6e5d;text-decoration:none;" onmouseover="this.style.color='#b8e04a'" onmouseout="this.style.color='#5a6e5d'">Acerca de</a>
-      <a href="disclaimer.html" style="color:#5a6e5d;text-decoration:none;" onmouseover="this.style.color='#b8e04a'" onmouseout="this.style.color='#5a6e5d'">Disclaimer</a>
-    </span>
-  </footer>
 </body>
 </html>
