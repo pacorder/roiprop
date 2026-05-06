@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-adsense-account" content="ca-pub-2358850294363122">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2358850294363122" crossorigin="anonymous"></script>
+<title>Fotografía Inmobiliaria con IA — PropTech Chile</title>
+<meta name="description" content="Mejora tus fotos de propiedades con inteligencia artificial. Corrección de iluminación, virtual staging y cielos perfectos. Desde $19.990 por set de 10 fotos.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#08090a;--bg2:#0c0e10;--surface:#111315;--surface2:#161a1c;--surface3:#1c2123;
+  --border:#252c2f;--border2:#1a2022;
+  --gold:#c9a96e;--gold2:#e8c99a;--gold3:#8a6a3a;
+  --text:#eef0f0;--text2:#8c9ea0;--text3:#4a5c5f;
+  --pos:#4ecdc4;--neg:#e05a4a;--warn:#e8a84a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"DM Mono",monospace;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 40px;
+  background:rgba(8,9,10,0.92);backdrop-filter:blur(20px) saturate(1.4);
+  border-bottom:1px solid rgba(201,169,110,0.1)}
+.nav-brand{font-family:"Cormorant Garamond",serif;font-size:1.3rem;font-weight:300;letter-spacing:0.08em;color:var(--gold2)}
+.nav-brand em{font-style:italic;color:var(--text2)}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-links a{font-size:9.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);transition:color 0.2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-links a.active{color:var(--text2)}
+.nav-wa{display:inline-flex;align-items:center;gap:7px;background:transparent;
+  border:1px solid rgba(201,169,110,0.35);color:var(--gold)!important;
+  padding:7px 16px;font-size:9.5px;letter-spacing:0.12em;transition:all 0.2s}
+.nav-wa:hover{background:rgba(201,169,110,0.08);border-color:var(--gold)}
+@media(max-width:760px){.nav{padding:0 20px}.nav-links{gap:14px}.hide-m{display:none}}
+
+/* BUTTONS */
+.btn-gold{display:inline-flex;align-items:center;gap:9px;background:var(--gold);color:#08090a;
+  padding:13px 28px;font-family:"DM Mono",monospace;font-size:10px;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;transition:background 0.2s,transform 0.15s}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-outline{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--border);
+  color:var(--text2);padding:13px 24px;font-family:"DM Mono",monospace;font-size:10px;
+  letter-spacing:0.1em;text-transform:uppercase;transition:all 0.2s}
+.btn-outline:hover{border-color:var(--gold3);color:var(--gold)}
+.btn-wa{display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#fff;
+  padding:15px 32px;font-family:"DM Mono",monospace;font-size:11px;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;transition:background 0.2s,transform 0.15s;
+  box-shadow:0 4px 20px rgba(37,211,102,0.25)}
+.btn-wa:hover{background:#1fbd59;transform:translateY(-1px);box-shadow:0 6px 28px rgba(37,211,102,0.4)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:120px 40px 80px}
+.hero-glow{position:absolute;z-index:0;width:800px;height:800px;right:-150px;top:50%;
+  transform:translateY(-50%);
+  background:radial-gradient(circle,rgba(201,169,110,0.07) 0%,transparent 65%);pointer-events:none}
+.hero-glow2{position:absolute;z-index:0;width:500px;height:500px;left:-100px;bottom:-100px;
+  background:radial-gradient(circle,rgba(78,205,196,0.04) 0%,transparent 65%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(201,169,110,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(201,169,110,0.03) 1px,transparent 1px);background-size:48px 48px}
+.hero-inner{position:relative;z-index:1;max-width:1080px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.hero-tag{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:28px;display:inline-flex;align-items:center;gap:10px}
+.hero-tag::before{content:"";width:24px;height:1px;background:var(--gold);opacity:0.5}
+.hero h1{font-family:"Cormorant Garamond",serif;font-size:clamp(2.8rem,5vw,4.5rem);
+  font-weight:300;line-height:1.05;margin-bottom:20px}
+.hero h1 em{font-style:italic;color:var(--gold2)}
+.hero-sub{font-size:12px;color:var(--text3);line-height:1.9;max-width:460px;margin-bottom:36px;
+  border-left:1px solid var(--border);padding-left:20px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+
+/* PRICE BADGE */
+.price-badge{
+  display:inline-flex;flex-direction:column;align-items:flex-start;
+  background:var(--surface);border:1px solid var(--border2);
+  padding:20px 24px;margin-bottom:32px;position:relative;overflow:hidden;
+}
+.price-badge::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold)}
+.price-old{font-size:11px;color:var(--text3);text-decoration:line-through;letter-spacing:0.06em;margin-bottom:4px}
+.price-tag-row{display:flex;align-items:baseline;gap:10px}
+.price-new{font-family:"Cormorant Garamond",serif;font-size:2.8rem;font-weight:300;color:var(--gold2);line-height:1}
+.price-unit{font-size:10px;color:var(--text3);letter-spacing:0.08em}
+.price-desc{font-size:10px;color:var(--text3);margin-top:8px}
+.price-badge-offer{
+  position:absolute;top:14px;right:14px;
+  background:var(--neg);color:#fff;
+  font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  padding:4px 8px;
+}
+
+/* SLIDER */
+.slider-wrap{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;
+  cursor:ew-resize;user-select:none;background:#000;border:1px solid var(--border2)}
+.slider-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.slider-img.after{clip-path:inset(0 0 0 50%)}
+.slider-line{position:absolute;top:0;bottom:0;width:2px;background:white;
+  left:50%;transform:translateX(-50%);z-index:10;pointer-events:none;
+  box-shadow:0 0 8px rgba(0,0,0,0.6)}
+.slider-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:44px;height:44px;background:white;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  z-index:11;pointer-events:none;box-shadow:0 2px 20px rgba(0,0,0,0.5)}
+.slider-lbl{position:absolute;bottom:14px;font-family:"DM Mono",monospace;
+  font-size:9px;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;z-index:12;pointer-events:none}
+.lbl-before{left:14px;background:rgba(0,0,0,0.6);color:#aaa}
+.lbl-after{right:14px;background:rgba(201,169,110,0.2);color:var(--gold);border:1px solid rgba(201,169,110,0.3)}
+.slider-hint{font-size:10px;color:var(--text3);text-align:center;margin-top:10px;letter-spacing:0.06em}
+
+/* SECTIONS */
+.sw{max-width:1080px;margin:0 auto;padding:80px 40px}
+.sec-tag{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.sec-tag::after{content:"";flex:0 0 32px;height:1px;background:rgba(201,169,110,0.3)}
+.sec-title{font-family:"Cormorant Garamond",serif;font-size:clamp(1.8rem,3vw,2.8rem);
+  font-weight:300;line-height:1.1;margin-bottom:14px}
+.sec-title em{font-style:italic;color:var(--gold2)}
+.sec-sub{font-size:12px;color:var(--text3);line-height:1.9;max-width:600px;margin-bottom:48px}
+
+/* FEATURES GRID */
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border2)}
+.feat{background:var(--surface);padding:28px 24px;transition:background 0.2s;position:relative;overflow:hidden}
+.feat:hover{background:var(--surface2)}
+.feat::after{content:"";position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0;transition:opacity 0.3s}
+.feat:hover::after{opacity:0.4}
+.feat-icon{font-size:24px;margin-bottom:16px}
+.feat-title{font-family:"Cormorant Garamond",serif;font-size:1.1rem;font-weight:300;
+  margin-bottom:8px;color:var(--text)}
+.feat-desc{font-size:11px;color:var(--text3);line-height:1.75}
+@media(max-width:760px){.features{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.features{grid-template-columns:1fr}}
+
+/* HOW IT WORKS */
+.steps-strip{background:var(--surface);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border2)}
+.step{background:var(--surface);padding:28px 24px}
+.step-n{font-family:"Cormorant Garamond",serif;font-size:3rem;font-weight:300;
+  color:rgba(201,169,110,0.1);line-height:1;margin-bottom:12px}
+.step-t{font-size:11px;color:var(--text);letter-spacing:0.06em;margin-bottom:8px}
+.step-d{font-size:10.5px;color:var(--text3);line-height:1.7}
+@media(max-width:760px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.steps{grid-template-columns:1fr}}
+
+/* PRICING */
+.pricing-card{
+  max-width:480px;margin:0 auto;
+  background:var(--surface);border:1px solid rgba(201,169,110,0.25);
+  padding:40px;position:relative;overflow:hidden;
+}
+.pricing-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold)}
+.pc-badge{
+  position:absolute;top:20px;right:20px;
+  background:var(--neg);color:#fff;font-size:9px;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;padding:5px 10px;
+}
+.pc-name{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.pc-old{font-size:12px;color:var(--text3);text-decoration:line-through;margin-bottom:6px}
+.pc-price{font-family:"Cormorant Garamond",serif;font-size:4rem;font-weight:300;
+  color:var(--gold2);line-height:1;margin-bottom:4px}
+.pc-period{font-size:10px;color:var(--text3);margin-bottom:24px}
+.pc-divider{height:1px;background:var(--border2);margin:24px 0}
+.pc-list{list-style:none;padding:0;margin-bottom:28px}
+.pc-list li{font-size:11px;color:var(--text2);padding:8px 0;
+  border-bottom:1px solid var(--border2);display:flex;align-items:baseline;gap:10px}
+.pc-list li::before{content:"✓";color:var(--gold);font-size:10px;flex-shrink:0}
+.pc-note{font-size:10px;color:var(--text3);text-align:center;margin-top:14px;line-height:1.6}
+
+/* STATS STRIP */
+.stats-strip{background:var(--surface);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border2);
+  max-width:1080px;margin:0 auto}
+.stat{background:var(--surface);padding:32px 24px;text-align:center}
+.stat-val{font-family:"Cormorant Garamond",serif;font-size:2.4rem;font-weight:300;
+  color:var(--gold);line-height:1;margin-bottom:8px}
+.stat-lbl{font-size:10px;color:var(--text3);letter-spacing:0.06em}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}}
+
+/* CTA FINAL */
+.cta-final{text-align:center;padding:100px 40px;position:relative;overflow:hidden}
+.cta-glow{position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(201,169,110,0.05) 0%,transparent 70%)}
+.cta-inner{position:relative;z-index:1;max-width:580px;margin:0 auto}
+.cta-inner h2{font-family:"Cormorant Garamond",serif;font-size:clamp(2rem,4vw,3rem);
+  font-weight:300;margin-bottom:16px;line-height:1.1}
+.cta-inner h2 em{font-style:italic;color:var(--gold2)}
+.cta-inner p{font-size:12px;color:var(--text3);margin-bottom:10px;line-height:1.8}
+.cta-inner .fine-print{font-size:10px;color:var(--text3);margin-bottom:36px}
+
+/* AD */
+.ad-slot{max-width:1080px;margin:0 auto;padding:8px 40px;min-height:90px;
+  display:flex;align-items:center;justify-content:center}
+
+/* FOOTER */
+.footer{background:var(--bg2);border-top:1px solid var(--border2);padding:56px 40px 28px}
+.footer-inner{max-width:1080px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-brand{font-family:"Cormorant Garamond",serif;font-size:1.3rem;font-weight:300;color:var(--gold2);margin-bottom:12px}
+.footer-tagline{font-size:11px;color:var(--text3);line-height:1.7;margin-bottom:20px}
+.footer-col-title{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text3);
+  margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border2)}
+.footer-links{display:flex;flex-direction:column;gap:9px}
+.footer-links a{font-size:11px;color:var(--text3);transition:color 0.15s}
+.footer-links a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid var(--border2);padding-top:20px;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:10px;color:var(--text3)}
+.wa-btn-f{display:inline-flex;align-items:center;gap:8px;background:#1a2e1a;border:1px solid #2a4a2a;
+  color:#4ade80;padding:10px 18px;font-family:"DM Mono",monospace;font-size:10px;transition:all 0.2s}
+.wa-btn-f:hover{background:#1f3a1f;border-color:#3a6a3a}
+@media(max-width:760px){.footer-grid{grid-template-columns:1fr 1fr;gap:32px}.footer{padding:40px 20px 24px}}
+@media(max-width:460px){.footer-grid{grid-template-columns:1fr}}
+
+/* WA FLOAT */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:999;width:54px;height:54px;
+  border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 24px rgba(37,211,102,0.35);transition:transform 0.2s,box-shadow 0.2s}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 6px 32px rgba(37,211,102,0.5)}
+
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr;gap:48px}.hero{padding:100px 20px 60px}}
+@media(max-width:600px){.sw{padding:60px 20px}.cta-final{padding:60px 20px}}
+@media print{.wa-float,.nav,.ad-slot{display:none}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-brand">Prop<em>Tech</em> Chile</a>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="calculadora.html">Calculadora</a>
+    <a href="fotografias.html" class="active">Fotografías</a>
+    <a href="guia.html" class="hide-m">Guía</a>
+    <a href="blog.html" class="hide-m">Blog</a>
+    <a href="https://wa.me/56952504101?text=Estoy%20interesado%20en%20edición%20de%20fotografías%20inmobiliarias" target="_blank" class="nav-wa">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.85L.057 23.55a.75.75 0 00.918.918l5.7-1.471A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.743 9.743 0 012.25 12 9.743 9.743 0 0112 2.25 9.743 9.743 0 0121.75 12 9.743 9.743 0 0112 21.75z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-tag">IA · Real Estate · Chile</div>
+      <h1>Fotos que<br><em>venden</em><br>propiedades</h1>
+      <p class="hero-sub">Transformamos imágenes ordinarias en fotografías de alto impacto con inteligencia artificial. Más visitas, más consultas, menos días en el mercado.</p>
+      <div class="price-badge">
+        <div class="pc-badge">−33% OFF</div>
+        <div class="price-old">Precio normal: $29.990</div>
+        <div class="price-tag-row">
+          <div class="price-new">$19.990</div>
+          <div class="price-unit">/ set 10 fotos</div>
+        </div>
+        <div class="price-desc">Oferta de lanzamiento · Entrega en 24 horas</div>
+      </div>
+      <div class="hero-btns">
+        <a href="https://wa.me/56952504101?text=Estoy%20interesado%20en%20edición%20de%20fotografías%20inmobiliarias" target="_blank" class="btn-wa">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.85L.057 23.55a.75.75 0 00.918.918l5.7-1.471A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.743 9.743 0 012.25 12 9.743 9.743 0 0112 2.25 9.743 9.743 0 0121.75 12 9.743 9.743 0 0112 21.75z"/></svg>
+          Quiero mejorar mis fotos
+        </a>
+        <a href="#como-funciona" class="btn-outline">Ver cómo funciona</a>
+      </div>
+    </div>
+
+    <!-- SLIDER -->
+    <div>
+      <div class="slider-wrap" id="photoSlider">
+        <img class="slider-img" src="https://roiprop.vercel.app/foto1.jpg" alt="Foto original sin editar" draggable="false">
+        <img class="slider-img after" src="https://roiprop.vercel.app/foto2.png" alt="Foto mejorada con IA" draggable="false" id="sliderBefore">
+        <div class="slider-line" id="sliderLine"></div>
+        <div class="slider-handle" id="sliderHandle">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round"><path d="M8 4l-4 8 4 8M16 4l4 8-4 8"/></svg>
+        </div>
+        <div class="slider-lbl lbl-after">Con IA ✦</div>
+        <div class="slider-lbl lbl-before">Original</div>
+      </div>
+      <p class="slider-hint">← Arrastra para comparar →</p>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats">
+    <div class="stat"><div class="stat-val">+40%</div><div class="stat-lbl">más visitas con fotos mejoradas</div></div>
+    <div class="stat"><div class="stat-val">−30%</div><div class="stat-lbl">días en el mercado</div></div>
+    <div class="stat"><div class="stat-val">24h</div><div class="stat-lbl">tiempo de entrega</div></div>
+    <div class="stat"><div class="stat-val">10</div><div class="stat-lbl">fotos por set incluidas</div></div>
+  </div>
+</div>
+
+<!-- AD -->
+<div class="ad-slot">
+  <ins class="adsbygoogle" style="display:block;width:100%;min-height:90px;"
+    data-ad-client="ca-pub-2358850294363122" data-ad-slot="auto"
+    data-ad-format="horizontal" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+</div>
+
+<!-- FEATURES -->
+<section>
+  <div class="sw">
+    <div class="sec-tag">Qué incluye</div>
+    <h2 class="sec-title">Todo lo que necesitas<br>para <em>destacar online</em></h2>
+    <p class="sec-sub">Cada set de fotos pasa por nuestro proceso de mejora con IA, diseñado específicamente para el mercado inmobiliario.</p>
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon">💡</div>
+        <div class="feat-title">Corrección de Iluminación</div>
+        <p class="feat-desc">Equilibramos la exposición, corregimos sombras y realzamos la luminosidad natural de cada espacio. Fotos oscuras o sobreexpuestas quedan perfectas.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🎨</div>
+        <div class="feat-title">Corrección de Color</div>
+        <p class="feat-desc">Ajustamos temperatura, saturación y contraste para que los colores reales de la propiedad se vean fieles y atractivos en pantalla.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🌤</div>
+        <div class="feat-title">Cielos Perfectos</div>
+        <p class="feat-desc">Reemplazamos cielos grises o sin atractivo por cielos despejados y luminosos. El exterior de tu propiedad siempre en su mejor versión.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🛋</div>
+        <div class="feat-title">Virtual Staging</div>
+        <p class="feat-desc">Amoblado digital para propiedades vacías. Agregamos muebles y decoración de forma realista para que los compradores imaginen el espacio habitado.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">✂️</div>
+        <div class="feat-title">Remoción de Objetos</div>
+        <p class="feat-desc">Eliminamos autos, basura, cables y elementos distractores que restan valor visual a la propiedad. La imagen final queda limpia y profesional.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📐</div>
+        <div class="feat-title">Corrección de Perspectiva</div>
+        <p class="feat-desc">Enderezamos líneas, corregimos distorsión de lente y optimizamos el encuadre para que cada foto transmita amplitud y profesionalismo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="steps-strip" id="como-funciona">
+  <div class="sw">
+    <div class="sec-tag">Proceso</div>
+    <h2 class="sec-title">Simple y <em>rápido</em></h2>
+    <p class="sec-sub">Cuatro pasos para tener tus fotos listas en 24 horas.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">01</div>
+        <div class="step-t">Envía tus fotos por WhatsApp</div>
+        <div class="step-d">Mándanos hasta 10 fotos en el mejor tamaño disponible. JPG o PNG. Sin mínimo de calidad requerida.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">02</div>
+        <div class="step-t">Confirmamos y procesamos</div>
+        <div class="step-d">Revisamos las fotos y confirmamos el servicio. Nuestro sistema de IA comienza el procesamiento de inmediato.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <div class="step-t">Entrega en 24 horas</div>
+        <div class="step-d">Recibes tus fotos mejoradas en alta resolución, listas para publicar en Portalinmobiliario, Yapo o donde necesites.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">04</div>
+        <div class="step-t">Revisión sin costo</div>
+        <div class="step-d">Si alguna foto no te convence, la ajustamos sin costo adicional. Tu satisfacción es nuestra prioridad.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section>
+  <div class="sw">
+    <div class="sec-tag">Precio</div>
+    <h2 class="sec-title">Claro y <em>sin sorpresas</em></h2>
+    <p class="sec-sub">Un solo plan, todo incluido, precio fijo. Sin suscripciones ni costos ocultos.</p>
+    <div class="pricing-card">
+      <div class="pc-badge">−33% OFF</div>
+      <div class="pc-name">Set Completo · Oferta de Lanzamiento</div>
+      <div class="pc-old">Precio normal $29.990</div>
+      <div class="pc-price">$19.990</div>
+      <div class="pc-period">por set de hasta 10 fotografías</div>
+      <div class="pc-divider"></div>
+      <ul class="pc-list">
+        <li>Hasta 10 fotografías por propiedad</li>
+        <li>Corrección de iluminación y color</li>
+        <li>Mejora de cielos exteriores</li>
+        <li>Remoción de objetos no deseados</li>
+        <li>Corrección de perspectiva y encuadre</li>
+        <li>Virtual staging (amoblado digital) si se requiere</li>
+        <li>Entrega en alta resolución en 24 horas</li>
+        <li>Una ronda de ajustes sin costo adicional</li>
+      </ul>
+      <a href="https://wa.me/56952504101?text=Estoy%20interesado%20en%20edición%20de%20fotografías%20inmobiliarias%20-%20quiero%20contratar%20el%20set%20de%20%2419.990" target="_blank" class="btn-wa" style="width:100%;justify-content:center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.85L.057 23.55a.75.75 0 00.918.918l5.7-1.471A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.743 9.743 0 012.25 12 9.743 9.743 0 0112 2.25 9.743 9.743 0 0121.75 12 9.743 9.743 0 0112 21.75z"/></svg>
+        Contratar por $19.990
+      </a>
+      <p class="pc-note">Pago por transferencia bancaria o Mercado Pago.<br>Procesamos una vez confirmado el pago.</p>
+    </div>
+  </div>
+</section>
+
+<!-- AD MID -->
+<div class="ad-slot">
+  <ins class="adsbygoogle" style="display:block;width:100%;min-height:90px;"
+    data-ad-client="ca-pub-2358850294363122" data-ad-slot="auto"
+    data-ad-format="horizontal" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+</div>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <div class="sec-tag" style="justify-content:center;margin-bottom:24px">Oferta de lanzamiento</div>
+    <h2>¿Tienes fotos que<br>mejorar <em>hoy</em>?</h2>
+    <p>Envíanos tus fotos por WhatsApp y las tendrás mejoradas en 24 horas.</p>
+    <p class="fine-print">Set de 10 fotos · $19.990 · Precio normal $29.990</p>
+    <a href="https://wa.me/56952504101?text=Estoy%20interesado%20en%20edición%20de%20fotografías%20inmobiliarias" target="_blank" class="btn-wa" style="margin:0 auto">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.85L.057 23.55a.75.75 0 00.918.918l5.7-1.471A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.743 9.743 0 012.25 12 9.743 9.743 0 0112 2.25 9.743 9.743 0 0121.75 12 9.743 9.743 0 0112 21.75z"/></svg>
+      Enviar mis fotos ahora
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">PropTech Chile</div>
+        <p class="footer-tagline">Asesoría inmobiliaria moderna para compra, arriendo y presentación de propiedades. Basados en Santiago, disponibles en todo Chile.</p>
+        <a href="https://wa.me/56952504101?text=Estoy%20interesado%20en%20edición%20de%20fotografías%20inmobiliarias" target="_blank" class="wa-btn-f">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.85L.057 23.55a.75.75 0 00.918.918l5.7-1.471A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.743 9.743 0 012.25 12 9.743 9.743 0 0112 2.25 9.743 9.743 0 0121.75 12 9.743 9.743 0 0112 21.75z"/></svg>
+          +56 9 5250 4101
+        </a>
+      </div>
+      <div>
+        <div class="footer-col-title">Servicios</div>
+        <div class="footer-links">
+          <a href="index.html#asesoria">Asesoría Compra</a>
+          <a href="index.html#asesoria">Asesoría Arriendo</a>
+          <a href="fotografias.html">Fotografía con IA</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Herramientas</div>
+        <div class="footer-links">
+          <a href="calculadora.html">Calculadora</a>
+          <a href="guia.html">Guía de Inversión</a>
+          <a href="glosario.html">Glosario</a>
+          <a href="blog.html">Blog</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <div class="footer-links">
+          <a href="privacidad.html">Privacidad</a>
+          <a href="terminos.html">Términos</a>
+          <a href="acerca.html">Acerca de</a>
+          <a href="disclaimer.html">Disclaimer</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 PropTech Chile · Santiago de Chile</span>
+      <span><a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a> · <a href="disclaimer.html">Disclaimer</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/56952504101?text=Estoy%20interesado%20en%20edición%20de%20fotografías%20inmobiliarias" target="_blank" class="wa-float" title="WhatsApp — Fotografías">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.85L.057 23.55a.75.75 0 00.918.918l5.7-1.471A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.743 9.743 0 012.25 12 9.743 9.743 0 0112 2.25 9.743 9.743 0 0121.75 12 9.743 9.743 0 0112 21.75z"/></svg>
+</a>
+
+<script>
+// PHOTO SLIDER
+(function() {
+  const wrap   = document.getElementById('photoSlider');
+  const before = document.getElementById('sliderBefore');
+  const line   = document.getElementById('sliderLine');
+  const handle = document.getElementById('sliderHandle');
+  let dragging = false;
+
+  function setPos(x) {
+    const rect = wrap.getBoundingClientRect();
+    const pct  = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
+    // "before" (original) covers right side, reveals as we drag left
+    before.style.clipPath = `inset(0 0 0 ${(pct*100).toFixed(1)}%)`;
+    line.style.left   = (pct*100).toFixed(1) + '%';
+    handle.style.left = (pct*100).toFixed(1) + '%';
+  }
+
+  // Init: show 50% each
+  before.style.clipPath = 'inset(0 0 0 50%)';
+
+  wrap.addEventListener('mousedown',  e => { dragging=true; setPos(e.clientX); e.preventDefault(); });
+  wrap.addEventListener('touchstart', e => { dragging=true; setPos(e.touches[0].clientX); }, {passive:true});
+  window.addEventListener('mousemove',  e => { if(dragging) setPos(e.clientX); });
+  window.addEventListener('touchmove',  e => { if(dragging) setPos(e.touches[0].clientX); }, {passive:true});
+  window.addEventListener('mouseup',  () => dragging=false);
+  window.addEventListener('touchend', () => dragging=false);
+})();
+</script>
+</body>
+</html>
